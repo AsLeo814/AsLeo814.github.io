@@ -33,6 +33,16 @@
       bodyClass: 'archive-banner-random',
       images: archiveImages
     },
+    '/categories/': {
+      mode: 'image',
+      bodyClass: 'category-banner-random',
+      images: archiveImages
+    },
+    '/categories/index.html': {
+      mode: 'image',
+      bodyClass: 'category-banner-random',
+      images: archiveImages
+    },
     '/links/': {
       mode: 'video',
       bodyClass: 'links-banner-video',

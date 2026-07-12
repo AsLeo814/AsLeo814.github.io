@@ -483,6 +483,120 @@ body.archive-banner-random a:hover {
   color: #ffffff;
 }
 
+body.category-banner-random {
+  background: #1c2535;
+}
+
+body.category-banner-random main {
+  position: relative;
+}
+
+body.category-banner-random .header-inner {
+  position: relative;
+  overflow: visible;
+}
+
+body.category-banner-random #banner.banner-image-enabled {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  background-size: cover !important;
+}
+
+body.category-banner-random #banner.banner-image-enabled .full-bg-img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+body.category-banner-random #banner.banner-image-enabled .mask {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(10, 16, 28, 0.16), rgba(10, 16, 28, 0.26)) !important;
+}
+
+body.category-banner-random .banner-text .h2,
+body.category-banner-random #subtitle {
+  color: #ffffff;
+  text-shadow: 0 3px 18px rgba(0, 0, 0, 0.28), 0 1px 3px rgba(0, 0, 0, 0.36);
+}
+
+body.category-banner-random #navbar {
+  background-color: transparent !important;
+  border-bottom: 1px solid transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.category-banner-random #navbar.top-nav-collapse,
+body.category-banner-random #navbar.navbar-col-show {
+  background-color: transparent !important;
+  border-bottom: 1px solid transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.category-banner-random #board {
+  position: relative;
+  z-index: 4;
+  margin-top: 0 !important;
+  padding: 2rem 0 3rem;
+  background-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+}
+
+body.category-banner-random .container.nopadding-x-md {
+  position: relative;
+  z-index: 4;
+}
+
+body.category-banner-random .category,
+body.category-banner-random .category-list,
+body.category-banner-random .category a,
+body.category-banner-random .category span,
+body.category-banner-random .category li,
+body.category-banner-random .category-post,
+body.category-banner-random .page-header,
+body.category-banner-random .page-header a,
+body.category-banner-random .page-header span {
+  color: rgba(248, 251, 255, 0.97);
+}
+
+body.category-banner-random .category .list-group-item,
+body.category-banner-random .category-count {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+body.category-banner-random .category .list-group-item,
+body.category-banner-random .category-count {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(228, 239, 255, 0.11));
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 14px 36px rgba(18, 40, 68, 0.12);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+body.category-banner-random .category .list-group-item:hover,
+body.category-banner-random .category-count:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.24), rgba(228, 239, 255, 0.15));
+}
+
+body.category-banner-random .category-collapse {
+  width: 100%;
+}
+
+body.category-banner-random a:hover {
+  color: #ffffff;
+}
+
 #modalSearch {
   z-index: 2000;
 }
