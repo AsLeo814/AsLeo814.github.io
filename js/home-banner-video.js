@@ -5,7 +5,10 @@
     '/guidang/4.png',
     '/guidang/5.png',
     '/guidang/6.png',
-    '/guidang/7.png'
+    '/guidang/7.png',
+    '/guidang/8.png',
+    '/guidang/9.png',
+    '/guidang/10.png',
   ];
 
   function pickRandom(items) {
@@ -41,6 +44,16 @@
     '/categories/index.html': {
       mode: 'image',
       bodyClass: 'category-banner-random',
+      images: archiveImages
+    },
+    '/tags/': {
+      mode: 'image',
+      bodyClass: 'tag-banner-random',
+      images: archiveImages
+    },
+    '/tags/index.html': {
+      mode: 'image',
+      bodyClass: 'tag-banner-random',
       images: archiveImages
     },
     '/links/': {
