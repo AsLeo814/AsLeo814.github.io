@@ -742,10 +742,11 @@ body.post-banner-random #board {
   z-index: 4;
   margin-top: 0 !important;
   padding: 2rem 0 3rem;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(247, 250, 255, 0.88));
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  box-shadow: none;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(247, 250, 255, 0.72));
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  backdrop-filter: blur(10px) saturate(115%);
+  -webkit-backdrop-filter: blur(10px) saturate(115%);
+  box-shadow: 0 16px 44px rgba(18, 40, 68, 0.16);
 }
 
 body.post-banner-random .container.nopadding-x-md {
@@ -770,6 +771,51 @@ body.post-banner-random .page-header a {
 
 body.post-banner-random .post-content img {
   box-shadow: 0 10px 26px rgba(18, 40, 68, 0.12);
+}
+
+body.post-banner-random #board-ctn .sidebar,
+body.post-banner-random #board-ctn #toc {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 0.75rem;
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  box-shadow: 0 12px 28px rgba(18, 40, 68, 0.12);
+}
+
+body.post-banner-random #board-ctn #toc {
+  padding: 1rem 1rem 0.95rem;
+}
+
+body.post-banner-random #board-ctn .toc-header,
+body.post-banner-random #board-ctn .toc-header i,
+body.post-banner-random #board-ctn .tocbot-link,
+body.post-banner-random #board-ctn .toc-toggle,
+body.post-banner-random #board-ctn .sidebar a,
+body.post-banner-random #board-ctn .sidebar span {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+body.post-banner-random #board-ctn .tocbot-link {
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+
+body.post-banner-random #board-ctn .tocbot-active-link {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+body.post-banner-random #board-ctn .toc-list-item::before {
+  background: rgba(255, 255, 255, 0.82);
+}
+
+body.post-banner-random #board-ctn .toc-body {
+  scrollbar-color: rgba(255, 255, 255, 0.55) transparent;
+}
+
+body.post-banner-random #board-ctn .toc-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.34);
 }
 
 #modalSearch {
