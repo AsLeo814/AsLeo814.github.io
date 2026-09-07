@@ -754,21 +754,6 @@ body.post-banner-random .container.nopadding-x-md {
   z-index: 4;
 }
 
-body.post-banner-random .post-content,
-body.post-banner-random .post-content a,
-body.post-banner-random .post-content span,
-body.post-banner-random .post-content p,
-body.post-banner-random .post-content li,
-body.post-banner-random .post-content time,
-body.post-banner-random .post-content .post-meta,
-body.post-banner-random .post-content .post-metas,
-body.post-banner-random .post-prevnext,
-body.post-banner-random .post-prevnext a,
-body.post-banner-random .page-header,
-body.post-banner-random .page-header a {
-  color: rgba(24, 32, 48, 0.98);
-}
-
 body.post-banner-random .post-content img {
   box-shadow: 0 10px 26px rgba(18, 40, 68, 0.12);
 }
