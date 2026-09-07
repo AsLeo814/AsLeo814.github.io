@@ -701,6 +701,77 @@ body.tag-banner-random .tagcloud a:hover {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.26), rgba(228, 239, 255, 0.16));
 }
 
+body.post-banner-random {
+  background: #1c2535;
+}
+
+body.post-banner-random main {
+  position: relative;
+}
+
+body.post-banner-random .header-inner {
+  position: relative;
+  overflow: visible;
+}
+
+body.post-banner-random #banner.banner-image-enabled {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  background-size: cover !important;
+}
+
+body.post-banner-random #banner.banner-image-enabled .full-bg-img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+body.post-banner-random #banner.banner-image-enabled .mask {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(10, 16, 28, 0.14), rgba(10, 16, 28, 0.24)) !important;
+}
+
+body.post-banner-random #board {
+  position: relative;
+  z-index: 4;
+  margin-top: 0 !important;
+  padding: 2rem 0 3rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(247, 250, 255, 0.88));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: none;
+}
+
+body.post-banner-random .container.nopadding-x-md {
+  position: relative;
+  z-index: 4;
+}
+
+body.post-banner-random .post-content,
+body.post-banner-random .post-content a,
+body.post-banner-random .post-content span,
+body.post-banner-random .post-content p,
+body.post-banner-random .post-content li,
+body.post-banner-random .post-content time,
+body.post-banner-random .post-content .post-meta,
+body.post-banner-random .post-content .post-metas,
+body.post-banner-random .post-prevnext,
+body.post-banner-random .post-prevnext a,
+body.post-banner-random .page-header,
+body.post-banner-random .page-header a {
+  color: rgba(24, 32, 48, 0.98);
+}
+
+body.post-banner-random .post-content img {
+  box-shadow: 0 10px 26px rgba(18, 40, 68, 0.12);
+}
+
 #modalSearch {
   z-index: 2000;
 }

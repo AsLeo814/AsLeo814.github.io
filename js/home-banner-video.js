@@ -2,10 +2,8 @@
   var path = window.location.pathname;
   var archiveImages = [
     '/guidang/3.png',
-    '/guidang/4.png',
     '/guidang/5.png',
     '/guidang/6.png',
-    '/guidang/7.png',
     '/guidang/8.png',
     '/guidang/9.png',
     '/guidang/10.png',
@@ -69,6 +67,14 @@
   };
 
   var config = pageMap[path];
+  var isPostPage = !config && document.querySelector('meta[property="og:type"][content="article"]');
+  if (isPostPage) {
+    config = {
+      mode: 'image',
+      bodyClass: 'post-banner-random',
+      images: archiveImages
+    };
+  }
   if (!config) {
     return;
   }
