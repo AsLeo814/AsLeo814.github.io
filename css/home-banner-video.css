@@ -51,6 +51,13 @@
   color: #ffffff !important;
 }
 
+#navbar #color-toggle-btn,
+#navbar #color-toggle-btn i,
+#mobile-grid-menu #mobile-color-toggle-btn,
+#mobile-grid-menu #mobile-color-toggle-btn i {
+  display: none !important;
+}
+
 #navbar.scrolling-navbar.top-nav-collapse,
 #navbar.scrolling-navbar.navbar-col-show {
   background-color: transparent !important;
