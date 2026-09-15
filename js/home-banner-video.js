@@ -13,6 +13,32 @@
     return items[Math.floor(Math.random() * items.length)];
   }
 
+  function forceDarkMode() {
+    try {
+      localStorage.setItem('Fluid_Color_Scheme', 'dark');
+    } catch (e) {}
+
+    document.documentElement.setAttribute('data-user-color-scheme', 'dark');
+
+    var themeColor = document.querySelector('meta[name="theme-color"]');
+    if (themeColor) {
+      var color = getComputedStyle(document.documentElement).getPropertyValue('--navbar-bg-color').trim();
+      if (color) {
+        themeColor.setAttribute('content', color);
+      }
+    }
+
+    var desktopToggle = document.getElementById('color-toggle-btn');
+    if (desktopToggle && desktopToggle.parentNode) {
+      desktopToggle.parentNode.removeChild(desktopToggle);
+    }
+
+    var mobileToggle = document.getElementById('mobile-color-toggle-btn');
+    if (mobileToggle && mobileToggle.parentNode) {
+      mobileToggle.parentNode.removeChild(mobileToggle);
+    }
+  }
+
   var pageMap = {
     '/': {
       mode: 'video',
@@ -65,6 +91,8 @@
       src: '/video/two.mp4'
     }
   };
+
+  forceDarkMode();
 
   var config = pageMap[path];
   var isPostPage = !config && document.querySelector('meta[property="og:type"][content="article"]');
