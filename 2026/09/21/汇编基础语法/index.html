@@ -1,0 +1,1850 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/touxiang/1.jpg">
+  <link rel="icon" href="/touxiang/1.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="AsLeo">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="汇编基础语法x86-64汇编核心语法包括：寄存器、寻址方式、指令系统、伪指令 寄存器（CPU数据容器）x86-64有16个通用寄存器（64位）：rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15 rsi（源变址）、rdi（目的变址）是 pwn 里很重要的两个——负责传函数的第 1、2 个参数 r8">
+<meta property="og:type" content="article">
+<meta property="og:title" content="汇编基础语法">
+<meta property="og:url" content="https://asleo814.github.io/2026/09/21/%E6%B1%87%E7%BC%96%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/index.html">
+<meta property="og:site_name" content="AsLeo的博客">
+<meta property="og:description" content="汇编基础语法x86-64汇编核心语法包括：寄存器、寻址方式、指令系统、伪指令 寄存器（CPU数据容器）x86-64有16个通用寄存器（64位）：rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15 rsi（源变址）、rdi（目的变址）是 pwn 里很重要的两个——负责传函数的第 1、2 个参数 r8">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/assembly-basics/01-register-write-width.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/assembly-basics/02-register-alias.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/assembly-basics/03-memory-dereference.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/assembly-basics/04-stack-pop.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/assembly-basics/05-call-stack.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/assembly-basics/06-stack-frame.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/assembly-basics/07-function-prologue.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/assembly-basics/08-function-epilogue.png">
+<meta property="article:published_time" content="2026-09-21T07:06:11.000Z">
+<meta property="article:modified_time" content="2026-09-21T07:06:31.244Z">
+<meta property="article:author" content="AsLeo">
+<meta property="article:tag" content="汇编">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://asleo814.github.io/img/posts/assembly-basics/01-register-write-width.png">
+  
+  
+  
+  <title>汇编基础语法 - AsLeo的博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/home-banner-video.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"asleo814.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":130,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>AsLeo的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/links/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-link-fill"></i>
+                  <span>友链</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="汇编基础语法"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-09-21 15:06" pubdate>
+          2026年9月21日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          15k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          128 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">汇编基础语法</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="汇编基础语法"><a href="#汇编基础语法" class="headerlink" title="汇编基础语法"></a>汇编基础语法</h1><p>x86-64汇编核心语法包括：寄存器、寻址方式、指令系统、伪指令</p>
+<h2 id="寄存器（CPU数据容器）"><a href="#寄存器（CPU数据容器）" class="headerlink" title="寄存器（CPU数据容器）"></a>寄存器（CPU数据容器）</h2><p>x86-64有16个通用寄存器（64位）：rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15</p>
+<p><code>rsi</code>（源变址）、<code>rdi</code>（目的变址）是 pwn 里很重要的两个——负责传函数的第 1、2 个参数</p>
+<p><code>r8</code>–<code>r15</code> 是 x86-64 新增的，没有 16 位&#x2F;8 位别名，只有<code>r8d</code>&#x2F;<code>r8w</code>&#x2F;<code>r8b</code> 这种小写后缀。</p>
+<p>按功能可分为通用、段、指令指针寄存器，核心常用寄存器如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">64位寄存器</th>
+<th align="center">32位别名</th>
+<th align="center">16位别名</th>
+<th align="center">8位别名（高&#x2F;低）</th>
+<th align="center">核心用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">rax</td>
+<td align="center">eax</td>
+<td align="center">ax</td>
+<td align="center">ah&#x2F;al</td>
+<td align="center">累加器，存储运算结果、系统调用号</td>
+</tr>
+<tr>
+<td align="center">rbx</td>
+<td align="center">ebx</td>
+<td align="center">bx</td>
+<td align="center">bh&#x2F;bl</td>
+<td align="center">基址寄存器，存储内存地址</td>
+</tr>
+<tr>
+<td align="center">rcx</td>
+<td align="center">ecx</td>
+<td align="center">cx</td>
+<td align="center">ch&#x2F;cl</td>
+<td align="center">计数器，循环、函数参数</td>
+</tr>
+<tr>
+<td align="center">rdx</td>
+<td align="center">edx</td>
+<td align="center">dx</td>
+<td align="center">dh&#x2F;dl</td>
+<td align="center">数据寄存器，扩展累加器、函数参数</td>
+</tr>
+<tr>
+<td align="center">rsp</td>
+<td align="center">esp</td>
+<td align="center">sp</td>
+<td align="center">spl</td>
+<td align="center">栈指针，指向当前栈帧的低地址段，（动态变化的“当前栈顶”）</td>
+</tr>
+<tr>
+<td align="center">rbp</td>
+<td align="center">ebp</td>
+<td align="center">bp</td>
+<td align="center">bpl</td>
+<td align="center">基址指针，指向当前栈帧的高地址端，也就是这个函数栈帧的“基部&#x2F;起点”</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">执行后 rax 的值</th>
+<th align="center">发生了什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>mov rax, 0x123456789ABCDEF0</code></td>
+<td align="center"><code>0x123456789ABCDEF0</code></td>
+<td align="center">64 位全写，正常</td>
+</tr>
+<tr>
+<td align="center"><code>mov eax, 0x12345678</code></td>
+<td align="center"><code>0x0000000012345678</code></td>
+<td align="center"><strong>高 32 位被自动清零</strong> —— 不是”只改低 32 位”</td>
+</tr>
+<tr>
+<td align="center"><code>mov al, 0x0F</code></td>
+<td align="center"><code>0x123456789ABCDE0F</code></td>
+<td align="center">只改最低 8 位，其余 56 位<strong>保持不动</strong></td>
+</tr>
+</tbody></table>
+<p>关键差异：<strong>写 32 位别名会清零高 32 位，写 8 位&#x2F;16 位别名不会</strong>。这是 x86-64 的规则（32 位运算自动零扩展）。</p>
+<p><img src="/img/posts/assembly-basics/01-register-write-width.png" srcset="/img/loading.gif" lazyload alt="78988395715"></p>
+<h3 id="寄存器别名：x86-64-最反直觉的设计"><a href="#寄存器别名：x86-64-最反直觉的设计" class="headerlink" title="寄存器别名：x86-64 最反直觉的设计"></a>寄存器别名：x86-64 最反直觉的设计</h3><p>rax \ eax \ ax \ al 不是四个寄存器，他们是同一个寄存器的四个不同宽度的“取景器”。rax是64位的本体，eax &#x2F; ax &#x2F; al是从它的最低位（右侧）开始截取的不同长度</p>
+<p><img src="/img/posts/assembly-basics/02-register-alias.png" srcset="/img/loading.gif" lazyload alt="78988234240"></p>
+<p>看图也知道一个常被误解的点：ah不是 rax 的高8位，而是 ax （低16位）里较高的那 8 位，也就是bit 8-15</p>
+<h2 id="寻址方式-访问数据的方式"><a href="#寻址方式-访问数据的方式" class="headerlink" title="寻址方式(访问数据的方式)"></a>寻址方式(访问数据的方式)</h2><p>寻址方式（CPU怎么找到它要操作的那个数据）</p>
+<h3 id="前置名词"><a href="#前置名词" class="headerlink" title="前置名词"></a>前置名词</h3><table>
+<thead>
+<tr>
+<th>名词</th>
+<th>人话解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>操作数</strong></td>
+<td>一条指令里被操作的对象。<code>mov rbx, rax</code> 里，<code>rbx</code> 和 <code>rax</code> 都是操作数。</td>
+</tr>
+<tr>
+<td><strong>源操作数 &#x2F; 目标操作数</strong></td>
+<td>数据的来源和去向。Intel 语法是「目标在前」，所以 <code>mov rbx, rax</code> 是”把 rax 的值放进 rbx”。</td>
+</tr>
+<tr>
+<td><strong>寻址方式</strong></td>
+<td>一条指令告诉你”数据在哪”，但”在哪”有很多种表达方式。这些表达方式的总称就是寻址方式。</td>
+</tr>
+<tr>
+<td><strong>标签（label）</strong></td>
+<td><code>var</code>、<code>arr</code> 这种名字。汇编器在编译时把它替换成一个具体的内存地址，但它本身不是变量。</td>
+</tr>
+<tr>
+<td><strong>段（section）</strong></td>
+<td>程序被分块存放。<code>.data</code> 段放<strong>有初值</strong>的全局数据，<code>.text</code> 段放<strong>机器指令</strong>。</td>
+</tr>
+<tr>
+<td><strong>db</strong></td>
+<td>define byte，定义 1 字节数据。</td>
+</tr>
+<tr>
+<td><strong>小端序（little-endian）</strong></td>
+<td>一个多字节的数在内存里<strong>低位字节放在低地址</strong>。x86 用的就是这个规则。这是理解后面错误的钥匙。</td>
+</tr>
+<tr>
+<td><strong>NASM</strong></td>
+<td>一种汇编器（把汇编文本翻译成机器码的程序）。你这段代码是 NASM 语法。</td>
+</tr>
+</tbody></table>
+<h3 id="四种寻址方式"><a href="#四种寻址方式" class="headerlink" title="四种寻址方式"></a>四种寻址方式</h3><p>x86-64支持多种寻址方式，核心常用4种，决定了如何获取内存中的数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs asm"><br>section .data<br>    var db 0x10           ; 定义字节变量var，值为0x10<br>    arr db 0x20, 0x30, 0x40  ; 定义字节数组arr<br><br>section .text<br>    global _start<br><br>_start:<br>    ; 1. 立即数寻址：直接使用常量（仅作源操作数）<br>    mov rax, 0x50          ; rax = 0x50<br><br>    ; 2. 寄存器寻址：访问寄存器中的数据<br>    mov rbx, rax           ; rbx = rax（0x50）<br><br>    ; 3. 直接寻址：通过内存地址访问数据<br>    mov rcx, [var]         ; rcx = var的值（0x10）<br><br>    ; 4. 寄存器间接寻址：通过寄存器中的地址访问数据<br>    mov rdx, arr           ; rdx = 数组arr的地址<br>    mov rsi, [rdx]         ; rsi = arr[0]（0x20）<br>    mov rdi, [rdx+1]       ; rdi = arr[1]（0x30）<br><br>    ; 退出程序<br>    mov rax, 60<br>    mov rdi, 0<br>    syscall<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="方括号-去内存取"><a href="#方括号-去内存取" class="headerlink" title="方括号 &#x3D; 去内存取"></a>方括号 &#x3D; 去内存取</h4><p>rdx 和 [rdx] 是两个完全不同的东西：</p>
+<p><img src="/img/posts/assembly-basics/03-memory-dereference.png" srcset="/img/loading.gif" lazyload alt="78988772539"></p>
+<p>理解了这个区别，四种寻址方式就都通了。逐行过一遍：</p>
+<table>
+<thead>
+<tr>
+<th align="center">行</th>
+<th align="center">寻址方式</th>
+<th align="center">讲解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>mov rax, 0x50</code></td>
+<td align="center"><strong>立即数寻址</strong></td>
+<td align="center"><code>0x50</code> 是写在指令里的常量，不来自寄存器也不来自内存。所以它<strong>只能当源操作数</strong>——<code>mov 0x50, rax</code> 是非法的，常量不能被赋值。</td>
+</tr>
+<tr>
+<td align="center"><code>mov rbx, rax</code></td>
+<td align="center"><strong>寄存器寻址</strong></td>
+<td align="center">数据在 CPU 内部传，速度最快，不碰内存。</td>
+</tr>
+<tr>
+<td align="center"><code>mov rcx, [var]</code></td>
+<td align="center"><strong>直接寻址</strong></td>
+<td align="center">地址写死在指令里。<code>[var]</code> &#x3D; “去 var 这个地址取数”。</td>
+</tr>
+<tr>
+<td align="center"><code>mov rdx, arr</code></td>
+<td align="center">取地址</td>
+<td align="center">注意：<strong>这里没有方括号</strong>，所以是把 arr 的地址装进 rdx，不是取内容。这就是 C 语言里 <code>char *p = arr;</code> 的意思。</td>
+</tr>
+<tr>
+<td align="center"><code>mov rsi, [rdx]</code></td>
+<td align="center"><strong>寄存器间接寻址</strong></td>
+<td align="center">地址不在指令里，而是存在 rdx 里。等价于 C 的 <code>*p</code>。</td>
+</tr>
+<tr>
+<td align="center"><code>mov rdi, [rdx+1]</code></td>
+<td align="center">间接 + 偏移</td>
+<td align="center">偏移 1 字节，等价于 C 的 <code>*(p+1)</code>。</td>
+</tr>
+</tbody></table>
+<h4 id="这四种方式其实是一个公式的特例"><a href="#这四种方式其实是一个公式的特例" class="headerlink" title="这四种方式其实是一个公式的特例"></a>这四种方式其实是一个公式的特例</h4><p>x86-64的内存操作数有统一格式</p>
+<p><code>[ base + index * sccle + disp ]</code></p>
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>base</td>
+<td>基址寄存器（任意通用寄存器）</td>
+</tr>
+<tr>
+<td>index</td>
+<td>变址寄存器（不能是 rsp）</td>
+</tr>
+<tr>
+<td>scale</td>
+<td>比例，只能是 1 &#x2F; 2 &#x2F; 4 &#x2F; 8</td>
+</tr>
+<tr>
+<td>disp</td>
+<td>常数偏移</td>
+</tr>
+</tbody></table>
+<p>四种”寻址方式”就是这个公式删掉某些项的结果：</p>
+<ul>
+<li>直接寻址 <code>[var]</code> → base 和 index 都没有，只剩 disp</li>
+<li>寄存器间接 <code>[rdx]</code> → 只有 base</li>
+<li>带偏移 <code>[rdx+1]</code> → base + disp</li>
+<li>数组访问 <code>[rbx+rcx*4]</code> → base + index × scale</li>
+</ul>
+<p><code>scale</code> 只能取 1&#x2F;2&#x2F;4&#x2F;8，正是为了匹配 1&#x2F;2&#x2F;4&#x2F;8 字节的数据宽度（<code>char</code>&#x2F;<code>short</code>&#x2F;<code>int</code>&#x2F;<code>long</code>）。</p>
+<h2 id="核心指令系统（常用）"><a href="#核心指令系统（常用）" class="headerlink" title="核心指令系统（常用）"></a>核心指令系统（常用）</h2><h3 id="前置名词-1"><a href="#前置名词-1" class="headerlink" title="前置名词"></a>前置名词</h3><table>
+<thead>
+<tr>
+<th>名词</th>
+<th>人话解释</th>
+<th>简单易懂类比</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>指令</strong></td>
+<td>CPU 能干的一个最小动作。<code>mov</code>、<code>add</code>、<code>jmp</code> 都是一条指令。</td>
+<td>厨房菜谱上的一步：切、炒、盛。</td>
+</tr>
+<tr>
+<td><strong>操作数</strong></td>
+<td>一条指令涉及的数据。<code>mov rax, 100</code> 里，<code>rax</code> 和 <code>100</code> 都是操作数。</td>
+<td>一步动作的原料和成品。</td>
+</tr>
+<tr>
+<td><strong>目的操作数 &#x2F; 源操作数</strong></td>
+<td>数据要去哪 &#x2F; 数据从哪来。Intel 语法里<strong>目的写在前</strong>。</td>
+<td>“把牛奶（源）倒进杯子（目的）”。</td>
+</tr>
+<tr>
+<td><strong>立即数</strong></td>
+<td>直接写在指令里的数字常量。<code>100</code>、<code>0x0F</code> 都是立即数。</td>
+<td>菜谱上直接写的”两勺盐”。</td>
+</tr>
+<tr>
+<td><strong>寄存器</strong></td>
+<td>CPU 内部极小的存储格子，速度最快，数量固定（几十个）。</td>
+<td>厨师手边的调料碟，伸手就能拿到。</td>
+</tr>
+<tr>
+<td><strong>栈</strong></td>
+<td>内存里一块”后进先出”的区域，用来暂存数据。</td>
+<td>一摞盘子，只能从顶上取放。</td>
+</tr>
+<tr>
+<td><strong>栈顶</strong></td>
+<td>栈里最后一个被放进去的位置。<strong>这台机器上栈是往下（低地址）长的。</strong></td>
+<td>那摞盘子的最上面那一个。</td>
+</tr>
+<tr>
+<td><strong>rsp</strong></td>
+<td>专门记录”栈顶在哪”的寄存器。</td>
+<td>你手边的一个书签，标着盘子摞到第几层。</td>
+</tr>
+<tr>
+<td><strong>标志位（rflags）</strong></td>
+<td>一个专门寄存器，不存数据，只存最近一次运算的”结论”（相等吗？负数吗？）。</td>
+<td>裁判举的牌，记录上一回合谁赢。</td>
+</tr>
+<tr>
+<td><strong>按位运算</strong></td>
+<td>不是把两个数当整体算，而是<strong>把每个二进制位单独拿出来算</strong>。</td>
+<td>两排开关，逐个对齐后分别决定开或关。</td>
+</tr>
+<tr>
+<td><strong>移位</strong></td>
+<td>把所有二进制位整体往左或往右挪几格，挪出去的位丢掉，空出来的位补 0。</td>
+<td>一排人整体往左平移一格，最左边的人被挤出队伍。</td>
+</tr>
+<tr>
+<td><strong>有符号 &#x2F; 无符号</strong></td>
+<td>同一串二进制，你可以把它当正数，也可以允许它是负数。两种视角下”谁大谁小”的结论可能相反。</td>
+<td>温度计上的 -5℃ 和 5℃，跟里程表上的”跑了 5 公里”是两码事。</td>
+</tr>
+<tr>
+<td><strong>128 位 &#x2F; rdx:rax</strong></td>
+<td>两个 64 位寄存器拼起来当一个超大数用，专门伺候乘除法。</td>
+<td>两个人的手接起来才够长，能抱住一个超大箱子。</td>
+</tr>
+<tr>
+<td><strong>汇编器（NASM）</strong></td>
+<td>把汇编文本翻译成机器码的程序。</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="数据传送指令（最常用）"><a href="#数据传送指令（最常用）" class="headerlink" title="数据传送指令（最常用）"></a>数据传送指令（最常用）</h3><h4 id="mov"><a href="#mov" class="headerlink" title="mov"></a>mov</h4><p>——赋值，但不是“移动”</p>
+<p>它的全称是<code>move</code>，但他的行为是<strong>复制</strong>，不是剪切；把源的值抄给目的，源本身不变</p>
+<ul>
+<li><code>mov rax, 100</code>-&gt; rax被写成100</li>
+<li><code>mov rbx, rax</code> -&gt; 把rax的内容抄一份给 rbx。抄完之后 rax 还是100，不是被清空了</li>
+</ul>
+<p><strong>机器层发生了什么</strong>：CPU从源位置读出一个值，写进目的位置。<code>mov</code>不修改标志位（这点和add、cmp不同，逆向时很重要）</p>
+<h5 id="三个必知限制"><a href="#三个必知限制" class="headerlink" title="三个必知限制"></a>三个必知限制</h5><ol>
+<li><p>不能内存直接传到内存。</p>
+<p><code>mov [a], [b]</code>是非法的，原因很朴素：CPU的连接线设计上只能“寄存器 &lt;-&gt; 内存”或“寄存器 &lt;-&gt; 寄存器”，没有“内存 &lt;-&gt; 内存”。想搬必须中转：<code>mov rax, [b]</code>然后<code>mov [a], rax</code></p>
+</li>
+<li><p>两端宽度必须一致。</p>
+<p><code>mov rax, bl</code>（64位 &lt;- 8位）是非法的，得写成<code>movzx rax, bl</code></p>
+</li>
+<li><p><code>mov</code>的目标不能是立即数 或 rflags。</p>
+<p>不能给常量赋值</p>
+</li>
+</ol>
+<h4 id="push"><a href="#push" class="headerlink" title="push"></a>push</h4><p>将数据压入栈（push操作数）</p>
+<p>注意：<strong>它只有一个操作数，因为它操作的位置是固定的——永远是栈顶</strong></p>
+<h5 id="只做两件事"><a href="#只做两件事" class="headerlink" title="只做两件事"></a>只做两件事</h5><ol>
+<li><code>rsp = rsp - 8</code>（栈往下长，所以是减）</li>
+<li>把操作数的8字节写进新的 <code>[rsp]</code></li>
+</ol>
+<h4 id="pop"><a href="#pop" class="headerlink" title="pop"></a>pop</h4><p>将数据从栈弹出（pop操作数）</p>
+<h5 id="做两件事"><a href="#做两件事" class="headerlink" title="做两件事"></a>做两件事</h5><ol>
+<li>把<code>[rsp]</code>处的8字节读出来，放进操作数</li>
+<li><code>rsp = rsp +8</code>（缩回来）</li>
+</ol>
+<p><img src="/img/posts/assembly-basics/04-stack-pop.png" srcset="/img/loading.gif" lazyload alt="78992285753"></p>
+<p>看上面的图，第三个状态里<code>0xFF8</code>位置上的<code>100</code>还在——<code>pop</code>只是把 rsp 移开了，并没有把数据擦掉。所以<code>pop</code>是“逻辑删除”，那块内存依然留着旧值。这个特性在pwn里非常关键：UAF（释放后利用）漏洞的本质，就是以程序以为内存“空了”，实际数据还在，而且被别人重新利用了。</p>
+<p>顺序必须相反**：先<code>push A </code>再 <code>push B</code>，取出来时必须先<code>pop B</code>（得到B）再<code>pop A</code>（得到A）。这就是”后进先出“</p>
+<h4 id="lea"><a href="#lea" class="headerlink" title="lea"></a>lea</h4><p>只算地址，不开抽屉</p>
+<p>全称<code>Load Effective Address</code>加载有效地址（lea寄存器）</p>
+<p>它的写法长得像”访问内存“（有方括号），但执行时<strong>完全不碰内存</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>动作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mov rax, [rbx]</code></td>
+<td>打开 rbx 指的抽屉，把里面的东西拿出来给 rax</td>
+</tr>
+<tr>
+<td><code>lea rax, [rbx]</code></td>
+<td><strong>不打开抽屉</strong>，只是把”rbx 这个编号”抄给 rax</td>
+</tr>
+</tbody></table>
+<p>差别在 <code>[rbx+8]</code> 这种情况上最明显：<code>lea rax, [rbx+8]</code> 只是做了个加法（rbx 的值加 8），<strong>不会</strong>去读 <code>rbx+8</code> 处的内存</p>
+<h5 id="有两个实际用途："><a href="#有两个实际用途：" class="headerlink" title="有两个实际用途："></a>有两个实际用途：</h5><ol>
+<li><strong>算复杂地址</strong>。数组第 i 个元素的地址是 <code>基址 + i × 元素大小</code>，正好对应 <code>[base + index*scale]</code> 格式，一条 <code>lea</code> 就能算出来。</li>
+<li><strong>当加法器用</strong>。编译器非常爱用 <code>lea rax, [rax+rax*2]</code> 来实现”乘 3”。原因是 <code>lea</code> <strong>不修改标志位</strong>、不经过算术逻辑单元、而且<strong>机器码里不会出现 0x00 空字节</strong>（这点在 shellcode 里是硬需求）。</li>
+</ol>
+<p><strong>所以逆向时看到 lea 不要条件反射认为它在取地址——它经常只是在做加法。</strong></p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs asm">mov rax, 100         ; rax = 100<br>mov rbx, rax         ; rbx = 100。注意 rax 依然是 100，没被清空<br>push rbx             ; rsp 减 8，把 100 写到新栈顶<br>pop rcx              ; rcx = 100，rsp 加 8 退回原位<br>lea rdx, [rax+rbx]   ; rdx = 100 + 100 = 200。rax、rbx 都没变，也没读内存<br></code></pre></td></tr></table></figure>
+
+<p><strong>补充</strong>：<code>rdx</code> 拿到的 200 这个结果，<code>add rdx, rax</code> 之类也能做到，但 <code>lea</code> 不会动标志位，也更容易被编码成不含空字节的机器码。</p>
+<h3 id="算法运算指令"><a href="#算法运算指令" class="headerlink" title="算法运算指令"></a>算法运算指令</h3><h4 id="add-sub-——加减法"><a href="#add-sub-——加减法" class="headerlink" title="add &#x2F; sub ——加减法"></a>add &#x2F; sub ——加减法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs asm">add 目的, 源       ; 目的 = 目的 + 源<br>sub 目的, 源       ; 目的 = 目的 - 源<br></code></pre></td></tr></table></figure>
+
+<p>特点：<strong>结果直接写回目的操作数</strong>（原地修改），同时<strong>会设置标志位</strong>（ZF、SF、OF、CF）。这是它们和 <code>mov</code> 最大的区别。</p>
+<h5 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a>示例</h5><p><img src="/img/posts/assembly-basics/05-call-stack.png" srcset="/img/loading.gif" lazyload alt="78995579966"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs asm">mov rax, 20<br>mov rbx, 10<br>add rax, rbx         ; rax = 20 + 10 = 30，rbx 还是 10<br>sub rax, 5           ; rax = 30 - 5 = 25<br></code></pre></td></tr></table></figure>
+
+<h4 id="mul-div"><a href="#mul-div" class="headerlink" title="mul &#x2F; div"></a>mul &#x2F; div</h4><h5 id="为什么乘除法要特殊对待"><a href="#为什么乘除法要特殊对待" class="headerlink" title="为什么乘除法要特殊对待"></a><strong>为什么乘除法要特殊对待</strong></h5><p><code>rax</code>只有64位，能表示的最大值是 2^64 - 1。但两个64位数相乘，结果最大能到约 2^128，一个寄存器装不下。则除法反过来：被除数可能非常大，除法本身也需要”放不下的空间“来周转</p>
+<p>而x86的解决方法很巧妙：把<code>rdx</code>和<code>rax</code>两个寄存器拼起来，当作一个 128 位的超大寄存器用，写作<code>rdx:rax</code>。其中 <code>rdx</code>负责高64位，<code>rax</code>负责低64位。</p>
+<h5 id="mul-（无符号乘法）"><a href="#mul-（无符号乘法）" class="headerlink" title="mul （无符号乘法）"></a>mul （无符号乘法）</h5><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">mul</span> 源操作数<br></code></pre></td></tr></table></figure>
+
+<p>只有一个操作数。另一个乘数是隐含的<code>rax</code>，所以<code>mul rcx</code>的真正意思是<code>rax * rcx</code>。执行结果：</p>
+<ul>
+<li><code>rdx = 乘积的高 64 位</code></li>
+<li><code>rax = 乘积的低 64 位</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs asm">mov rax, 25<br>mov rcx, 2<br>mul rcx              ; rdx = 0，rax = 50<br></code></pre></td></tr></table></figure>
+
+
+
+<h6 id="mul用法"><a href="#mul用法" class="headerlink" title="mul用法"></a>mul用法</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs asm">mov rax, 25<br>mov rcx, 2<br>mul rcx             ; rdx:rax = 25 × 2，结果 rdx = 0，rax = 50<br></code></pre></td></tr></table></figure>
+
+<p>在实际写代码时，如果确定结果不会超过64位，更推荐用<strong>有符号乘法的双操作数</strong>形式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs asm">imul rax, rbx       ; 结果只保留低 64 位，rdx 完全不受影响<br></code></pre></td></tr></table></figure>
+
+<p><code>imul</code>这个名字是“有符号乘法”，但因为低64位的二进制乘法结果在有无符号两种视角下是<strong>完全相同的</strong>，所以它在只需要低64位时被广泛当成**“不会污染 rdx 的乘法”**来用，这是实际工程的一个使用技巧</p>
+<p><strong>检测乘法是否溢出</strong>，可以在乘法后立刻判断：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs asm">mul rcx<br>jo  overflow_happened   ; OF 被置 1 说明结果超出了 64 位<br></code></pre></td></tr></table></figure>
+
+<p>不过要注意 <code>mul</code> 只保证正确设置 CF 和 OF 这两个标志位，<strong>其他标志位的状态是未定义的</strong>，所以不要依赖乘法后的 ZF 或 SF 做判断。</p>
+<h5 id="div"><a href="#div" class="headerlink" title="div"></a>div</h5><p>用法：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs applescript"><span class="hljs-keyword">div</span> 源操作数<br></code></pre></td></tr></table></figure>
+
+<p>也是单操作数，除数自己写，被除数隐含</p>
+<p><strong>含义</strong>是：被除数不是<code>rax</code>一个，而是<code>rdx:rax</code>这个128位的整体。执行结果分两处存放——<strong>商进<code>rax</code>，余数进<code>rdx</code></strong></p>
+<p><strong>原理</strong>：为什么被除数要这么设计？因为除法要能处理“被除数比一个寄存器能存的最大值还大”的情况。如果要除的数是200位宽，CPU没法处理，所以它规定被除数最多128位，用<code>rdx:rax</code>拼出来。这个设计有个副作用：<code>rdx</code>对除法来说不是“辅助寄存器”，而是被除数的高位部分——它参与了运算，不是可有可无的。</p>
+<p><img src="/img/posts/assembly-basics/06-stack-frame.png" srcset="/img/loading.gif" lazyload alt="78996167369"></p>
+<h6 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h6><p>第一步，<strong>动手之前必须先清空 rdx</strong>，写成 <code>xor rdx, rdx</code>。原因是 <code>rdx</code> 是 128 位被除数的高半部分，如果它里面残留着旧数据，那么被除数就变成了”旧数据 × 2 的 64 次方 + rax”，是个天文数字，除出来的商极可能超过 64 位，<code>rax</code> 装不下，CPU 就直接抛异常，Linux 下表现为程序被 <code>SIGFPE</code>（浮点异常信号）杀死，终端打印 <code>Floating point exception</code>。这个报错名字有点误导性，它跟浮点数没关系，是整数除法的异常。</p>
+<p>第二步，<strong>把被除数放进 rax</strong>（低 64 位）。</p>
+<p>第三步，<strong>写 div 除数</strong>，除数可以放 <code>rcx</code> 里，也可以直接是一个内存变量。</p>
+<p>完整的写法是这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs asm">mov rax, 50<br>xor rdx, rdx        ; 必须的一步<br>mov rcx, 2<br>div rcx             ; rax = 25（商），rdx = 0（余数）<br></code></pre></td></tr></table></figure>
+
+<p>还有一条红线：<strong>除数不能是 0</strong>。<code>div</code> 遇到除零会直接触发异常，程序崩溃。所以如果你写的除数来自用户输入，必须先检查它是不是 0，这正是很多真实漏洞的直接成因。</p>
+<p>实用场景上，<code>div</code> 有一个特别常用的副产品——<strong>取余数</strong>。C 语言里的 <code>a % b</code> 就编译成一条 <code>div</code>，然后从 <code>rdx</code> 里读余数。所以要算”17 除以 5 的余数”：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs asm">mov rax, 17<br>xor rdx, rdx<br>mov rcx, 5<br>div rcx<br>; 现在 rax = 3（商），rdx = 2（余数），想去哪拿就去哪拿<br></code></pre></td></tr></table></figure>
+
+
+
+<p>此外</p>
+<p><strong>有符号版本 idiv</strong>：如果被除数可能是负数，<code>xor rdx, rdx</code> 这一招就不好使了，因为负数的 128 位表示不是这样。比如 -50 的正确 128 位形式是高位全是 1、低位是 <code>0xFFFFFFCE</code> 这样的补码。这时候要用专门的指令 <code>cqo</code>（全称 convert quadword to octword，把 <code>rax</code> 的符号位复制着填满整个 <code>rdx</code>）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs asm">mov rax, -50<br>cqo                 ; 正数时 rdx 变 0，负数时 rdx 变成全 1<br>mov rcx, 2<br>idiv rcx            ; rax = -25，rdx = 0<br></code></pre></td></tr></table></figure>
+
+<p>同理，<code>mul</code> 的有符号版本是 <code>imul</code>。这组指令的存在意义就是：<code>mul</code>&#x2F;<code>div</code> 把操作数永远当正数看，而 <code>imul</code>&#x2F;<code>idiv</code> 会考虑符号位。</p>
+<h3 id="逻辑运算指令"><a href="#逻辑运算指令" class="headerlink" title="逻辑运算指令"></a>逻辑运算指令</h3><h4 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h4><table>
+<thead>
+<tr>
+<th align="center">名词</th>
+<th align="center">人话解释</th>
+<th align="center">例子 &#x2F; 类比</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>位（bit）</strong></td>
+<td align="center">最小的信息单位，只能取 0 或 1。8 位 &#x3D; 1 字节，<code>rax</code> &#x3D; 64 位。</td>
+<td align="center">一个开关，要么开要么关。</td>
+</tr>
+<tr>
+<td align="center"><strong>二进制</strong></td>
+<td align="center">每位只能写 0 或 1 的计数方式，逢二进一。</td>
+<td align="center">十进制的 13 写作 <code>1101</code>。</td>
+</tr>
+<tr>
+<td align="center"><strong>权重</strong></td>
+<td align="center">二进制每一位代表固定的数值大小，从右往左是 1、2、4、8、16……</td>
+<td align="center"><code>1101</code> &#x3D; 1×8 + 1×4 + 0×2 + 1×1 &#x3D; 13。这是理解移位的钥匙。</td>
+</tr>
+<tr>
+<td align="center"><strong>十六进制</strong></td>
+<td align="center">二进制的简写，<strong>一个十六进制位 &#x3D; 四个二进制位</strong>。</td>
+<td align="center"><code>0xF</code> &#x3D; <code>1111</code>，<code>0x0F</code> &#x3D; <code>0000 1111</code>，<code>0xA</code> &#x3D; <code>1010</code>。</td>
+</tr>
+<tr>
+<td align="center"><strong>按位运算</strong></td>
+<td align="center">不把两个数当整体算，而是拆开让每一位单独和对应位运算。</td>
+<td align="center"><code>3 &amp; 5</code> 是 <code>011</code> 与 <code>101</code> 逐位比得 <code>001</code>（1）；普通加法 <code>3+5=8</code> 是当作整体。</td>
+</tr>
+<tr>
+<td align="center"><strong>掩码（mask）</strong></td>
+<td align="center">专门用来筛选或控制某些位的数，本身往往没有数值含义。</td>
+<td align="center">一块打了孔的铁板：有孔的位留下，没孔的一律挡住。</td>
+</tr>
+<tr>
+<td align="center"><strong>补码</strong></td>
+<td align="center">计算机表示负数的方式：正数按位取反再加一。</td>
+<td align="center">64 位下 -1 就是 64 个 1，即 <code>0xFFFFFFFFFFFFFFFF</code>。</td>
+</tr>
+<tr>
+<td align="center"><strong>标志位（rflags）</strong></td>
+<td align="center">一个专门寄存器，不存数据，只存最近一次运算的”结论”，每个结论占 1 位。</td>
+<td align="center">裁判手里的记分牌，后文的条件跳转全靠它下判断。</td>
+</tr>
+<tr>
+<td align="center"><strong>ZF &#x2F; SF &#x2F; OF &#x2F; CF</strong></td>
+<td align="center">分别为：结果为零、结果为负（最高位是 1）、有符号溢出、无符号进位或借位。</td>
+<td align="center">四张判罚牌。</td>
+</tr>
+<tr>
+<td align="center"><strong>逻辑运算对标志位的影响</strong></td>
+<td align="center"><code>and</code>、<code>or</code>、<code>xor</code>、<code>shl</code>、<code>shr</code> 会把 CF、OF 清零并更新 ZF、SF；<strong>not 谁都不碰</strong>。</td>
+<td align="center">所以 <code>xor rax, rax</code> 清零后能直接接 <code>jz</code>。</td>
+</tr>
+</tbody></table>
+<h4 id="四种运算的逐位规则"><a href="#四种运算的逐位规则" class="headerlink" title="四种运算的逐位规则"></a>四种运算的逐位规则</h4><table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>A and B</th>
+<th>A or B</th>
+<th>A xor B</th>
+<th>not A</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p>一句话抓住本质：</p>
+<ul>
+<li><p><code>and</code> 是”两边1才得1”；</p>
+</li>
+<li><p><code>                              or</code> 是”有1就是1”；</p>
+</li>
+<li><p><code>                            xor</code> 是”不同才留 1”；</p>
+</li>
+<li><p><code>                    not</code> 是”逐位反色”，且<strong>翻转的是全部 64 位</strong>，不是只翻低 8 位。</p>
+</li>
+</ul>
+<p>把规则落到实际寄存器上就是下面这张图，起点统一是 <code>rax = 0000 1111</code>：</p>
+<p><img src="/img/posts/assembly-basics/07-function-prologue.png" srcset="/img/loading.gif" lazyload alt="78996723420"></p>
+<h4 id="and（逐位与）"><a href="#and（逐位与）" class="headerlink" title="and（逐位与）"></a>and（逐位与）</h4><p><strong>用法：</strong><code>and 目的, 源</code></p>
+<p><strong>含义：</strong>“两边都是1才得1”</p>
+<p>**原理：**源操作数里为0的位会把目的的对应位无条件清零，为1的位则原样保留（因为 <code>0 &amp; x = 0</code>，<code>1 &amp; x = x</code>）。所以<code>and</code>的本质是“按掩码筛掉某些位”</p>
+<table>
+<thead>
+<tr>
+<th>实际场景</th>
+<th>写法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>取低位（截断）</td>
+<td><code>and rax, 0xFF</code></td>
+<td>只留最低 1 字节，高 56 位清零</td>
+</tr>
+<tr>
+<td>对 2 的幂取余</td>
+<td><code>and rax, 0xF</code></td>
+<td>等价于 <code>rax % 16</code>，编译器常用这招替代除法</td>
+</tr>
+<tr>
+<td>判断奇偶</td>
+<td><code>and rax, 1</code> 后接 <code>jz</code></td>
+<td>最低位为 1 即奇数（其他位的权重都是偶数）</td>
+</tr>
+<tr>
+<td>地址对齐</td>
+<td><code>and rsp, -16</code></td>
+<td>低 4 位清零，对齐到 16 字节边界（系统调用常要求）</td>
+</tr>
+<tr>
+<td>检查某一位</td>
+<td><code>test rax, 0x4</code></td>
+<td>检查要用 <code>test</code>，它同样只设标志位，但<strong>不破坏原值</strong></td>
+</tr>
+</tbody></table>
+<h4 id="or-（逐位或）"><a href="#or-（逐位或）" class="headerlink" title="or （逐位或）"></a>or （逐位或）</h4><p><strong>用法：</strong><code>or 目的， 源</code></p>
+<p>**含义：**只要有一个 1 就是 1</p>
+<p>**原理：**与<code>and</code>镜像互补，源里为1的位把目的对应位强行置 1，为 0 的位原样保留（<code>0 | x = x</code>，<code>1 | x = 1</code>），所以它是强行点亮</p>
+<table>
+<thead>
+<tr>
+<th>实际场景</th>
+<th>写法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>置位</td>
+<td><code>or rax, 0x08</code></td>
+<td>bit3 无条件变 1，其他位不动</td>
+</tr>
+<tr>
+<td>合并权限标志</td>
+<td><code>or rax, 0x2</code></td>
+<td>叠加权限；用 <code>or</code> 不会误关掉已开启的位，<code>add</code> 会被进位搅乱</td>
+</tr>
+<tr>
+<td>构造全 1</td>
+<td><code>or rax, -1</code></td>
+<td>-1 的补码是 64 个 1，结果全 1</td>
+</tr>
+</tbody></table>
+<p><strong>or 无法清位</strong>。要清掉 bit3 只能用 <code>and rax, ~mask</code>，<code>~</code> 在汇编里对应的就是下文的 <code>not</code>。</p>
+<h4 id="xor（逐位异或）"><a href="#xor（逐位异或）" class="headerlink" title="xor（逐位异或）"></a>xor（逐位异或）</h4><p><strong>用法：</strong><code>xor 目的， 源</code></p>
+<p>**含义：**不同得 1</p>
+<p>独有的性质是<strong>可逆</strong>：<code>a xor b = c</code>，则 <code>c xor b = a</code>。原因是异或记录的是”两个数在哪些位置不同”，再异或一次就把差异抹掉、还原原值。</p>
+<table>
+<thead>
+<tr>
+<th>实际场景</th>
+<th>写法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>清零</td>
+<td><code>xor rax, rax</code></td>
+<td>3 字节（<code>48 31 C0</code>）且<strong>不含 0x00</strong>；<code>mov rax, 0</code> 是 7 字节且含多个空字节</td>
+</tr>
+<tr>
+<td>加解密</td>
+<td><code>xor byte [p], 0x37</code></td>
+<td>同一段代码跑两遍即还原，恶意样本常用它藏字符串</td>
+</tr>
+<tr>
+<td>交换两寄存器</td>
+<td>三步 <code>xor</code> 交叉</td>
+<td>逆向题常出现；现代编译器少用（三步骤串行依赖，更慢）</td>
+</tr>
+<tr>
+<td>判断相等</td>
+<td><code>xor rax, rbx</code> 后接 <code>jz</code></td>
+<td>结果为 0 当且仅当两数每一位都相同，即完全相等</td>
+</tr>
+</tbody></table>
+<h4 id="not-（逐位取反）"><a href="#not-（逐位取反）" class="headerlink" title="not （逐位取反）"></a>not （逐位取反）</h4><p><strong>用法：</strong><code>not 目的</code>，单操作数，因为它不需要第二个数参照</p>
+<p>**含义：**每一位 0 变 1、1 变 0，翻转全部64位（）不是只翻低 8 位，<code>not rax</code>对<code>0x0F</code>得到<code>0xFFFFFFFFFFFFFFF0</code></p>
+<table>
+<thead>
+<tr>
+<th>实际场景</th>
+<th>写法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>生成清位掩码</td>
+<td><code>not rax</code> 再 <code>and</code></td>
+<td>清位的标准流程：先用 <code>not</code> 造掩码，再用 <code>and</code> 应用</td>
+</tr>
+<tr>
+<td>求相反数</td>
+<td><code>not rax</code> + <code>inc rax</code></td>
+<td>等价于 <code>neg rax</code>（补码 &#x3D; 取反加一），编译器有时这么生成</td>
+</tr>
+<tr>
+<td>注意事项</td>
+<td>—</td>
+<td><strong>not 不修改任何标志位</strong>（与 <code>neg</code> 不同），后面接 <code>jz</code> 会读到更早那条指令的旧结论</td>
+</tr>
+</tbody></table>
+<h4 id="shl-shr-（移位）"><a href="#shl-shr-（移位）" class="headerlink" title="shl &#x2F; shr （移位）"></a>shl &#x2F; shr （移位）</h4><p><strong>用法：</strong><code>shl 目的， 位数</code>，位数可以是立即数，也可以放在<code>cl</code>里（<code>cl</code>是 x86 历史上唯一允许指定移位次数得寄存器）。</p>
+<p>**含义：**整体平移，移出去得位进 CF，空出去得位补0.</p>
+<p>**原理：**每位权重都是2的幂，所以左移 n 位等于 2ⁿ，右移 n 位等于除以 2ⁿ 向下取整。</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>空位补什么</th>
+<th>用于</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>shl</code></td>
+<td>低位补 0</td>
+<td>有符号、无符号都可以</td>
+<td><code>shl rax, 3</code> &#x3D; ×8</td>
+</tr>
+<tr>
+<td><code>shr</code></td>
+<td>高位补 0</td>
+<td><strong>仅无符号</strong></td>
+<td>对负数会把符号毁掉：<code>1111 0100</code>（-12）右移成 <code>0111 1010</code>（+122）</td>
+</tr>
+<tr>
+<td><code>sar</code></td>
+<td>高位补<strong>原符号位</strong></td>
+<td><strong>有符号</strong></td>
+<td>同一个 -12 右移得 <code>1111 1010</code>（-6），符合数学预期</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>实际场景</th>
+<th>写法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>快速乘除</td>
+<td><code>shl rax, 3</code></td>
+<td>移位比乘法指令快，编译器普遍这么做</td>
+</tr>
+<tr>
+<td>提取高位</td>
+<td><code>shr rax, 32</code></td>
+<td>取原高 32 位（原低位被挤出丢弃）</td>
+</tr>
+<tr>
+<td>拼接大常量</td>
+<td><code>mov</code> + <code>shl</code> + <code>or</code></td>
+<td>绕过 <code>mov</code> 立即数只能用 32 位的限制</td>
+</tr>
+<tr>
+<td>捕获被移出的位</td>
+<td><code>shl rax, 1</code> 后接 <code>jc</code></td>
+<td>判断原最高位是否为 1（溢出检测常用）</td>
+</tr>
+</tbody></table>
+<p>两条限制要记牢：<strong>移位次数按 64 取模</strong>，<code>shl rax, 64</code> 实际是”移 0 位”，什么都不做，<code>shl rax, 65</code> 等价于移 1 位；<strong>负数右移必须用 sar</strong>，用 <code>shr</code> 会把负数变成大正数。</p>
+<h3 id="控制转移指令（实现分支-循环）"><a href="#控制转移指令（实现分支-循环）" class="headerlink" title="控制转移指令（实现分支&#x2F;循环）"></a>控制转移指令（实现分支&#x2F;循环）</h3><h4 id="前置知识-1"><a href="#前置知识-1" class="headerlink" title="前置知识"></a>前置知识</h4><table>
+<thead>
+<tr>
+<th>名词</th>
+<th>人话解释</th>
+<th>在这里的作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>rip（指令指针）</strong></td>
+<td>一个寄存器，存着”下一条要执行的指令在哪”。程序每执行一条指令，rip 就自动走到下一条。<strong>谁能改 rip，谁就控制了程序往哪跑。</strong></td>
+<td>所有跳转指令的本质都是”往 rip 里写一个新地址”。</td>
+</tr>
+<tr>
+<td><strong>标志位（rflags）</strong></td>
+<td>一个专门寄存器，不存数据，只存最近一次运算留下的几个”结论”，每个结论只占 1 个二进制位。</td>
+<td>它是 <code>cmp</code> 和条件跳转之间的<strong>传话筒</strong>：<code>cmp</code> 负责写，跳转负责读。</td>
+</tr>
+<tr>
+<td><strong>ZF（零标志）</strong></td>
+<td>结果为 0 时置 1。两数相减得 0 就意味着两数相等。</td>
+<td><code>je</code>&#x2F;<code>jz</code>、<code>jne</code>&#x2F;<code>jnz</code> 读的就是它。</td>
+</tr>
+<tr>
+<td><strong>SF（符号标志）</strong></td>
+<td>结果的最高位是 1 时置 1。在有符号视角下表示”结果是负数”。</td>
+<td><code>jg</code>&#x2F;<code>jl</code> 判断有符号大小时要用它。</td>
+</tr>
+<tr>
+<td><strong>OF（溢出标志）</strong></td>
+<td>有符号运算结果越界（正+正&#x3D;负之类）时置 1。</td>
+<td>同样是 <code>jg</code>&#x2F;<code>jl</code> 的判据之一。</td>
+</tr>
+<tr>
+<td><strong>CF（进位标志）</strong></td>
+<td>无符号运算产生进位或借位时置 1。</td>
+<td><code>ja</code>&#x2F;<code>jb</code> 这套无符号跳转读它。</td>
+</tr>
+<tr>
+<td><strong>标签（label）</strong></td>
+<td>代码里的一个名字，汇编器在编译时把它替换成一个具体地址。它本身不是变量，只是一个”地名”。</td>
+<td><code>jmp label1</code> 里的 <code>label1</code> 就是跳转目的地。</td>
+</tr>
+<tr>
+<td><strong>cmp</strong></td>
+<td>一条”只比较、不留结果”的指令，内部做一次减法，算完把结果扔掉，<strong>只保留标志位</strong>。</td>
+<td>它是条件跳转的前置动作，几乎总成对出现。</td>
+</tr>
+<tr>
+<td><strong>顺流而下（fall through）</strong></td>
+<td>如果没有任何指令改变 rip，CPU 就一条接一条往下执行。</td>
+<td>这是汇编里最容易出逻辑错误的地方：忘写跳转，就会莫名其妙地执行到下一个标签的代码。</td>
+</tr>
+<tr>
+<td><strong>有符号 &#x2F; 无符号视角</strong></td>
+<td>同一串二进制，按有符号读可能是负数，按无符号读是个巨大的正数。<code>0xFF...FF</code> 按有符号是 -1，按无符号是 18446744073709551615。</td>
+<td>决定你该用 <code>jl</code> 还是 <code>jb</code>——用错方向，判断结论完全相反。</td>
+</tr>
+</tbody></table>
+<h4 id="cmp"><a href="#cmp" class="headerlink" title="cmp"></a>cmp</h4><p><strong>使用</strong>：<code>cmp 目的操作数，源操作数</code></p>
+<p><strong>做的事</strong>：内部计算——目的 - 源，然后把结果丢掉，只把这次减法的特征（ZF、SF、OF、CF）写进标志位</p>
+<p>向拿天平称两个包裹，目的只是知道”哪边重”，并不关心具体差多少克。</p>
+<p><code>cmp rax rbx</code>算的是<code>rax - rbx</code>，所以后面接<code>jl</code>表达的是“rax小于rbx“，也就是第一个操作数小于第二个操作数。</p>
+<h4 id="jmp"><a href="#jmp" class="headerlink" title="jmp"></a>jmp</h4><p>——无条件跳转</p>
+<p><strong>使用</strong>：<code>jmp 标签</code></p>
+<p><strong>含义</strong>：直接把 rip 改成标签所在的地址，无条件、无理由</p>
+<p><strong>原理</strong>：它是最纯粹的”改路线“，不像条件跳转要看标志位脸色，<code>jmp</code>不读任何标志位，也不修改任何标志位</p>
+<h5 id="用处"><a href="#用处" class="headerlink" title="用处"></a>用处</h5><p>第一个是<strong>做无条件分支</strong>，上面的分支执行完，必须跳到出口，不能顺流掉下去：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs asm">jmp finish      ; 直接去出口<br></code></pre></td></tr></table></figure>
+
+
+
+<p>第二个是<strong>做循环</strong>（向后跳转回上面的标签）。这是 <code>jmp</code> 配合条件跳转的经典组合：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs asm">    mov rcx, 5<br>loop_start:<br>    ; 循环体：做五次某件事<br>    dec rcx         ; rcx 减 1，同时设置标志位<br>    jnz loop_start  ; rcx 不为 0 就跳回去<br></code></pre></td></tr></table></figure>
+
+<p>注意这里的分工：<code>jmp</code> 管”跳得动”，条件跳转管”什么时候停”。向后跳转（目标在当前指令之前）通常就是循环，向前跳转（目标在后面）通常就是分支——这是逆向时快速判断代码结构的经验。</p>
+<p>第三个是<strong>间接跳转</strong>，也就是跳转目标不是写死的标签，而是从寄存器或内存里读出来的：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs x86asm"><span class="hljs-keyword">jmp</span> <span class="hljs-built_in">rax</span>         <span class="hljs-comment">; 跳到 rax 里存的地址</span><br><span class="hljs-keyword">jmp</span> [<span class="hljs-built_in">rax</span>]       <span class="hljs-comment">; 跳到 rax 指向的位置里存的地址</span><br><span class="hljs-keyword">jmp</span> <span class="hljs-built_in">qword</span> [<span class="hljs-built_in">rax</span>+<span class="hljs-number">8</span>]   <span class="hljs-comment">; 带偏移</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>这一点在 pwn 里至关重要</strong>：<code>jmp rax</code> 意味着”跳到哪”由数据决定。如果攻击者能控制那个寄存器或那块内存，就能让程序跳到自己想要的地方——C++ 的虚函数调用、函数指针数组、GOT 表跳转，都是这个机制，也都是漏洞利用的常见落脚点。</p>
+<h4 id="条件跳转家族"><a href="#条件跳转家族" class="headerlink" title="条件跳转家族"></a>条件跳转家族</h4><p>条件跳转的写法是 <code>j条件 标签</code>，含义是”<strong>读指定的标志位，满足就跳，不满足就往下走</strong>“。</p>
+<p>同一行里的两条指令<strong>机器码完全相同</strong>，只是取了不同的说法：</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>判据</th>
+<th>含义</th>
+<th>别名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>je</code></td>
+<td>ZF &#x3D; 1</td>
+<td>相等就跳</td>
+<td><code>jz</code>（零标志为 1）</td>
+</tr>
+<tr>
+<td><code>jne</code></td>
+<td>ZF &#x3D; 0</td>
+<td>不相等就跳</td>
+<td><code>jnz</code></td>
+</tr>
+<tr>
+<td><code>jg</code></td>
+<td>ZF&#x3D;0 且 SF&#x3D;OF</td>
+<td><strong>有符号</strong>大于</td>
+<td><code>jnle</code></td>
+</tr>
+<tr>
+<td><code>jge</code></td>
+<td>SF &#x3D; OF</td>
+<td><strong>有符号</strong>大于等于</td>
+<td><code>jnl</code></td>
+</tr>
+<tr>
+<td><code>jl</code></td>
+<td>SF ≠ OF</td>
+<td><strong>有符号</strong>小于</td>
+<td><code>jnge</code></td>
+</tr>
+<tr>
+<td><code>jle</code></td>
+<td>ZF&#x3D;1 或 SF≠OF</td>
+<td><strong>有符号</strong>小于等于</td>
+<td><code>jng</code></td>
+</tr>
+<tr>
+<td><code>ja</code></td>
+<td>CF&#x3D;0 且 ZF&#x3D;0</td>
+<td><strong>无符号</strong>大于</td>
+<td><code>jnbe</code></td>
+</tr>
+<tr>
+<td><code>jae</code></td>
+<td>CF &#x3D; 0</td>
+<td><strong>无符号</strong>大于等于</td>
+<td><code>jnb</code>、<code>jnc</code></td>
+</tr>
+<tr>
+<td><code>jb</code></td>
+<td>CF &#x3D; 1</td>
+<td><strong>无符号</strong>小于</td>
+<td><code>jnae</code>、<code>jc</code></td>
+</tr>
+<tr>
+<td><code>jbe</code></td>
+<td>CF&#x3D;1 或 ZF&#x3D;1</td>
+<td><strong>无符号</strong>小于等于</td>
+<td><code>jna</code></td>
+</tr>
+<tr>
+<td><code>js</code> &#x2F; <code>jns</code></td>
+<td>SF &#x3D; 1 &#x2F; SF &#x3D; 0</td>
+<td>结果为负 &#x2F; 非负</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>jo</code> &#x2F; <code>jno</code></td>
+<td>OF &#x3D; 1 &#x2F; OF &#x3D; 0</td>
+<td>有溢出 &#x2F; 无溢出</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p>别名为什么这么起？规则是”<strong>加 n 表示取反</strong>“。<code>jl</code> 的反面是”大于等于”，所以 <code>jl</code> 也叫 <code>jnge</code>（not greater or equal）。认名字的规律比死记整张表轻松。</p>
+<p><strong>必须记住的坑：jl 和 jb 判断的是完全不同的东西。</strong></p>
+<p>拿 <code>rax = 0xFFFFFFFFFFFFFFFF</code> 举例，按有符号它是 <strong>-1</strong>，按无符号它是 <strong>18446744073709551615</strong>。执行 <code>cmp rax, 1</code> 之后：</p>
+<ul>
+<li><code>jl</code> 会跳转，因为按有符号 -1 &lt; 1；</li>
+<li><code>jb</code> 不会跳转，因为按无符号这个数远大于 1。</li>
+</ul>
+<p>同一个数、同一条 <code>cmp</code>，两条指令给出相反结论。编译器生成的代码里这两套会混着出现（取决于源码里变量声明成 <code>int</code> 还是 <code>unsigned int</code>），逆向时判断错符号类型，就会得出完全错误的逻辑。</p>
+<p><strong>另一个重要性质：跳转指令自己不修改标志位。</strong> <code>jmp</code>、<code>je</code>、<code>jl</code> 这些只管读和跳，不会碰 rflags。所以你可以一条 <code>cmp</code> 之后连续接好几个不同的条件跳转，它们看到的是<strong>同一份</strong>比较结果——这也是编译器愿意用 <code>cmp</code> + 多次跳转来组织代码的原因。</p>
+<p>顺带一个工程细节：条件跳转有距离限制，跳得很近时汇编器用 1 字节的短跳转（机器码 2 字节），跳得远就用 4 字节的近跳转（机器码 6 字节）。写代码时不用管，但看机器码长度能判断跳转距离。</p>
+<h2 id="伪指令"><a href="#伪指令" class="headerlink" title="伪指令"></a>伪指令</h2><h3 id="简要"><a href="#简要" class="headerlink" title="简要"></a>简要</h3><p>前面学的（<code>mov</code>、<code>jmp</code> 、<code>syscall</code>等等）是给CPU看的，伪指令是写给<strong>汇编器</strong>看的</p>
+<table>
+<thead>
+<tr>
+<th>名词</th>
+<th>人话解释</th>
+<th>例子 &#x2F; 说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>机器指令</strong></td>
+<td>CPU 能直接执行的动作，最终会变成二进制机器码，装进可执行文件。</td>
+<td><code>mov rax, 60</code>、<code>syscall</code> 都是。</td>
+</tr>
+<tr>
+<td><strong>伪指令（汇编器指令）</strong></td>
+<td><strong>CPU 根本不认识</strong>它，它只是给汇编器的一条”排版说明”或”登记信息”。汇编完成后它自己就消失了，不留任何机器码。</td>
+<td><code>section .text</code>、<code>global _start</code>、<code>len equ 10</code>。</td>
+</tr>
+<tr>
+<td><strong>汇编器（NASM）</strong></td>
+<td>把汇编文本翻译成机器码的程序。它负责处理伪指令、把标签换成地址、把数据排进内存。</td>
+<td>类比：翻译官。伪指令就是你对翻译官说的”这页用大标题、这页加脚注”，成品里不会留下这些嘱咐。</td>
+</tr>
+<tr>
+<td><strong>链接器（ld）</strong></td>
+<td>把汇编器产出的目标文件（<code>.o</code>）加工成可执行文件的程序，负责拼接各段、解析符号、确定入口地址。</td>
+<td><code>nasm</code> 出一个 <code>.o</code>，<code>ld</code> 把它变成可执行文件。</td>
+</tr>
+<tr>
+<td><strong>目标文件 &#x2F; 可执行文件</strong></td>
+<td>前者是半成品（<code>.o</code>），后者是可以直接被系统加载运行的成品。</td>
+<td>伪指令里的段信息先写进 <code>.o</code>，由链接器汇总成最终布局。</td>
+</tr>
+<tr>
+<td><strong>段（section）</strong></td>
+<td>程序被分块存放，每块承担不同职责，且加载到内存后<strong>拥有不同的访问权限</strong>。</td>
+<td>代码段只读可执行，数据段可读可写。这是伪指令存在的最主要理由。</td>
+</tr>
+<tr>
+<td><strong>符号（symbol）</strong></td>
+<td>一个名字，代表一个地址或一个常量。链接器靠符号来把不同文件、不同位置连起来。</td>
+<td><code>_start</code>、<code>msg</code>、<code>len</code> 都是符号。</td>
+</tr>
+<tr>
+<td><strong>小端序（little-endian）</strong></td>
+<td>多字节的数在内存里<strong>低位字节放在低地址</strong>。x86 用的就是它。</td>
+<td><code>dq 0x123456789ABCDEF0</code> 在内存里从低到高是 <code>F0 DE BC 9A 78 56 34 12</code>。</td>
+</tr>
+<tr>
+<td><strong>对齐（alignment）</strong></td>
+<td>数据摆放位置要满足某种倍数要求，不满足时汇编器&#x2F;编译器会插入空白字节（填充）。</td>
+<td>为了让 CPU 一次就读到，多字节数据通常对齐到自己的宽度。</td>
+</tr>
+</tbody></table>
+<p><strong>机器指令决定程序”做什么”，伪指令决定程序”长什么样”</strong></p>
+<h3 id="section-段定义伪指令"><a href="#section-段定义伪指令" class="headerlink" title="section 段定义伪指令"></a>section 段定义伪指令</h3><p><strong>使用：</strong><code>section 名字</code></p>
+<p>作用是：告诉汇编器”接下来这段内容属于哪个段“。它本身不产生任何机器码，只是切换当前的工作台</p>
+<p>原理上为什么非要分段？因为加载到内存后，<strong>每个段会被映射成有不同权限的内存区域</strong>。代码只需要读和执行、绝不允许改写（否则程序能改自己，也就意味着攻击者能改它）；常量只读；变量要读写。这种”权限分离”是操作系统层面的保护机制，而它的前提就是——链接时程序必须明确告诉系统”哪块是什么”。</p>
+<table>
+<thead>
+<tr>
+<th>段</th>
+<th>存什么</th>
+<th>初值</th>
+<th>加载后的权限</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.text</code></td>
+<td>机器指令（代码）</td>
+<td>有</td>
+<td><strong>r-x</strong>（可读、可执行、不可写）</td>
+</tr>
+<tr>
+<td><code>.rodata</code></td>
+<td>只读常量（字符串字面量等）</td>
+<td>有</td>
+<td><strong>r–</strong>（只能读）</td>
+</tr>
+<tr>
+<td><code>.data</code></td>
+<td>有初值的全局变量&#x2F;常量</td>
+<td>有</td>
+<td><strong>rw-</strong>（可读写、不可执行）</td>
+</tr>
+<tr>
+<td><code>.bss</code></td>
+<td>无初值的变量，只声明大小</td>
+<td><strong>无</strong></td>
+<td><strong>rw-</strong></td>
+</tr>
+</tbody></table>
+<p><img src="/img/posts/assembly-basics/08-function-epilogue.png" srcset="/img/loading.gif" lazyload alt="78997195362"></p>
+<p>图里 <code>.bss</code> 用了虚线框，因为它在文件里<strong>不占空间</strong>——这是它和 <code>.data</code> 最本质的区别</p>
+<p><strong>具体怎么用</strong>：段声明是”分组开关”，写在哪一行，从这一行起的内容就归属那个段，直到遇到下一个 <code>section</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs asm">section .data<br>    var1 db 0x10          ; 属于 .data<br><br>section .bss<br>    buf resb 64           ; 属于 .bss<br><br>section .text<br>    global _start<br>_start:                   ; 属于 .text<br>    mov rax, 60<br>    xor rdi, rdi<br>    syscall<br></code></pre></td></tr></table></figure>
+
+<p><strong>两个实践要点:</strong></p>
+<p>第一，<strong>.data 和 .bss 的区别在于有没有初值</strong>：<code>db 0x10</code> 有初值，初值必须真实写进可执行文件，所以放 <code>.data</code>；而 <code>resb 64</code> 只是”预留 64 字节，内容不重要”，如果也在文件里存 64 个 0，纯属浪费空间，所以放 <code>.bss</code>——加载器在程序启动时直接把这片区域清零，文件里只记录”要 64 字节”这一个数字。</p>
+<p>第二，<strong>.bss 里只能用 resb&#x2F;resw&#x2F;resd&#x2F;resq 这类”预留”伪指令，不能写 db 1 这种带初值的数据</strong>，否则汇编器会报错（逻辑上矛盾：既说不占空间，又要求存初值）。</p>
+<h3 id="变量定义伪指令：db-dw-dd-dq"><a href="#变量定义伪指令：db-dw-dd-dq" class="headerlink" title="变量定义伪指令：db &#x2F; dw &#x2F; dd &#x2F; dq"></a>变量定义伪指令：db &#x2F; dw &#x2F; dd &#x2F; dq</h3><p>这四个伪指令的作用是<strong>在数据段里开辟一块空间并填入初值</strong>，区别只在于<strong>每份数据占几个字节</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>伪指令</th>
+<th>全称</th>
+<th>宽度</th>
+<th>名字来源</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>db</code></td>
+<td>define byte</td>
+<td>1 字节 &#x2F; 8 位</td>
+<td>byte</td>
+</tr>
+<tr>
+<td><code>dw</code></td>
+<td>define word</td>
+<td>2 字节 &#x2F; 16 位</td>
+<td>word（x86 的”字”是 16 位）</td>
+</tr>
+<tr>
+<td><code>dd</code></td>
+<td>define doubleword</td>
+<td>4 字节 &#x2F; 32 位</td>
+<td>double word</td>
+</tr>
+<tr>
+<td><code>dq</code></td>
+<td>define quadword</td>
+<td>8 字节 &#x2F; 64 位</td>
+<td>quad word</td>
+</tr>
+</tbody></table>
+<p>写法的固定结构是：<strong>标签 + 伪指令 + 初值</strong>。这里讲清一个容易搞混的点——<strong>标签（如 var1）代表的是”地址”，不是”值”</strong>。汇编器把 <code>var1</code> 登记为”这块数据的起始地址”，<code>mov rax, var1</code> 得到的是地址，<code>mov rax, [var1]</code> 才是去取内容。这和前面讲寻址方式时说的”有方括号才是访问内存”一致。</p>
+<p><strong>具体怎么用</strong>，五种常见形态：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs asm">section .data<br>    b1   db 0x10                    ; 一个字节<br>    w1   dw 0x1234                  ; 两个字节<br>    d1   dd 0x12345678              ; 四个字节<br>    q1   dq 0x123456789ABCDEF0      ; 八个字节<br><br>    arr  db 0x20, 0x30, 0x40        ; 一次定义多个值，形成一个数组<br>    nums dd 1, 2, 3, 4              ; 32 位数的数组，共 16 字节<br><br>    msg  db &#x27;Hello&#x27;, 0              ; 字符串，末尾的 0 是 C 语言的结束符<br>    pad  times 8 db 0               ; 重复 8 次，得到 8 个 0 字节<br></code></pre></td></tr></table></figure>
+
+<p><code>.bss</code> 里则用”预留”版本，它们<strong>不带初值</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs asm">r1 resb 1     ; 预留 1 字节<br>    r2 resw 1     ; 预留 2 字节<br>    r3 resd 1     ; 预留 4 字节<br>    r4 resq 1     ; 预留 8 字节<br>    buf resb 4096 ; 预留 4 KB 缓冲区<br></code></pre></td></tr></table></figure>
+
+
+
+<p>关于 <strong>dq 0x123456789ABCDEF0</strong> 这一行，有个要掌握的：由于 x86 是小端序，<strong>这个数在内存里从低地址往高地址排是 F0 DE BC 9A 78 56 34 12</strong>——和我们书写时的顺序完全相反。这一点直接决定了两件事：</p>
+<p>​        一. 是以后用 gdb 查看内存时会看到”颠倒”的字节序列，不要以为出错了。</p>
+<p>​        二. 是写 payload 时，一个 8 字节地址必须按小端序排列才能正确覆盖返回地址。</p>
+<p>还有一个延续：<strong>用多大的指针去读，决定了读到几个字节</strong>。<code>var1 db 0x10</code> 只定义了 1 字节，如果写 <code>mov rax, [var1]</code>，汇编器会去读 8 个字节，把后面的 <code>w1</code>、<code>d1</code> 的头部字节一起卷进来。正确写法是 <code>movzx rax, byte [var1]</code>。</p>
+<h3 id="常量定义伪指令：equ"><a href="#常量定义伪指令：equ" class="headerlink" title="常量定义伪指令：equ"></a>常量定义伪指令：equ</h3><p><strong>使用：</strong><code>名字 equ 值</code></p>
+<p>**作用：**给一个值起个别名，这个别名在编译期就被替换掉</p>
+<p><strong>它和变量有本质区别：</strong><code>equ</code>不占任何内存、没有地址、不是变量</p>
+<p><strong>更像是”文本替换“</strong>：汇编器看到<code>len</code>就替换成<code>10</code>，产出的机器码里只有<code>10</code>，没有<code>len</code>这个东西。</p>
+<p><strong>具体怎么用</strong>，三个典型场景：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs asm">SYS_WRITE equ 1          ; 给系统调用号起名，代码可读性大幅提升<br>SYS_EXIT  equ 60<br>BUF_SIZE  equ 4096<br><br>section .bss<br>    buf resb BUF_SIZE    ; 直接用常量当大小<br><br>section .data<br>    msg db &#x27;Hello&#x27;, 0x0A<br>    msg_len equ $ - msg  ; 用当前位置减去起始位置，编译期算出字符串长度<br></code></pre></td></tr></table></figure>
+
+<p>第三行那个 <code>$ - msg</code> 是很实用的技巧。<code>$</code> 是 NASM 里的特殊符号，表示<strong>当前这一行的地址</strong>；<code>msg</code> 是字符串起始地址。两者相减就是字符串占用的字节数，而<strong>这个计算在编译期就完成了</strong>，运行时不做任何运算，也不占用额外指令。写 <code>write</code> 系统调用时，长度参数经常就用这招自动算出来，改字符串就不必手动改长度了。</p>
+<p>两点补充。第一，<strong>equ 定义的值不能在后面修改</strong>，因为它压根不是存储单元，不存在”修改”这回事。第二，NASM 里还有两个相关写法：<code>%define</code> 是真正的宏（可以做参数替换，比 <code>equ</code> 更灵活），<code>%assign</code> 定义的是<strong>可以重新赋值</strong>的数字常量。日常写小型汇编，<code>equ</code> 已经够用。</p>
+<h3 id="入口声明：global-start"><a href="#入口声明：global-start" class="headerlink" title="入口声明：global_start"></a>入口声明：global_start</h3><p><strong>使用：</strong><code>global 符号位</code></p>
+<p>**作用：**把符号导出成“全局可见”，让链接器在处理其他文件时能看到它</p>
+<p>原理要结合链接过程理解：汇编器把每个 <code>.asm</code> 文件翻译成独立的 <code>.o</code> 文件，此时文件里的标签都是”本地符号”，外面看不见。<code>global</code> 相当于在符号表上盖一个”对外公开”的章。链接器在拼接所有 <code>.o</code> 文件时，只能看到被公开的符号——<strong>程序入口也必须是公开符号，否则链接器找不到入口在哪儿</strong>。</p>
+<p><strong>具体怎么用</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs asm">global _start        ; 导出入口符号<br>extern printf        ; 反向操作：声明&quot;我要用别的文件里的 printf&quot;<br></code></pre></td></tr></table></figure>
+
+<p><code>extern</code> 是 <code>global</code> 的反向操作，用于引用外部符号（比如调用 C 库函数）。</p>
+<p>如果不写 <code>global _start</code>，链接时会报 <code>undefined reference to &#39;_start&#39;</code> 或 <code>cannot find entry symbol _start</code>——这两个报错你早期一定会遇到，根因就是”入口符号没公开”。</p>
+<p>顺便说明一个容易被误解的点：<strong>_start 这个名字不是随意起的</strong>。链接器 <code>ld</code> 默认就把 <code>_start</code> 当作程序入口，这个约定和 ELF 文件头里那个”入口地址”字段对应。你写 C 程序时用的是 <code>main</code>，那是因为 C 运行时库会先执行一段准备代码，再由它去调用 <code>main</code>；而在纯汇编里没有这层包装，所以直接以 <code>_start</code> 作为起点。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/PWN/" class="category-chain-item">PWN</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/PWN/%E6%B1%87%E7%BC%96/" class="category-chain-item">汇编</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%B1%87%E7%BC%96/" class="print-no-link">#汇编</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>汇编基础语法</div>
+      <div>https://asleo814.github.io/2026/09/21/汇编基础语法/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>AsLeo</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年9月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/09/19/ClassLoader%E5%9F%BA%E7%A1%80/" title="ClassLoader基础">
+                        <span class="hidden-mobile">ClassLoader基础</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/home-banner-video.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
