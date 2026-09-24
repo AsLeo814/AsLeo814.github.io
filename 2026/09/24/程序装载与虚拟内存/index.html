@@ -1,0 +1,901 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/touxiang/1.jpg">
+  <link rel="icon" href="/touxiang/1.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="AsLeo">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前置知识1. 内存（memory）与磁盘（disk）——两个”仓库”的区别 这是理解整节的底层物理事实，先讲：  磁盘（硬盘&#x2F;SSD）：容量大、便宜、但慢（慢几个数量级）。程序文件、数据文件都躺在磁盘上。 内存（RAM）：容量小、贵、但快。CPU 只能直接从内存里取指令和数据，不能直接读磁盘——这是硬件铁律。  所以任何程序要跑，第一步必须是”从磁盘搬进内存”。这就是”装载”这件事存在的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="程序装载与虚拟内存">
+<meta property="og:url" content="https://asleo814.github.io/2026/09/24/%E7%A8%8B%E5%BA%8F%E8%A3%85%E8%BD%BD%E4%B8%8E%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/index.html">
+<meta property="og:site_name" content="AsLeo的博客">
+<meta property="og:description" content="前置知识1. 内存（memory）与磁盘（disk）——两个”仓库”的区别 这是理解整节的底层物理事实，先讲：  磁盘（硬盘&#x2F;SSD）：容量大、便宜、但慢（慢几个数量级）。程序文件、数据文件都躺在磁盘上。 内存（RAM）：容量小、贵、但快。CPU 只能直接从内存里取指令和数据，不能直接读磁盘——这是硬件铁律。  所以任何程序要跑，第一步必须是”从磁盘搬进内存”。这就是”装载”这件事存在的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-24T03:55:59.000Z">
+<meta property="article:modified_time" content="2026-09-24T03:57:14.654Z">
+<meta property="article:author" content="AsLeo">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>程序装载与虚拟内存 - AsLeo的博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/home-banner-video.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"asleo814.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":130,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>AsLeo的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/links/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-link-fill"></i>
+                  <span>友链</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="程序装载与虚拟内存"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-09-24 11:55" pubdate>
+          2026年9月24日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">程序装载与虚拟内存</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h1><p><strong>1. 内存（memory）与磁盘（disk）——两个”仓库”的区别</strong></p>
+<p>这是理解整节的底层物理事实，先讲：</p>
+<ul>
+<li><strong>磁盘（硬盘&#x2F;SSD）</strong>：容量大、便宜、<strong>但慢</strong>（慢几个数量级）。程序文件、数据文件都躺在磁盘上。</li>
+<li><strong>内存（RAM）</strong>：容量小、贵、<strong>但快</strong>。CPU 只能直接从内存里取指令和数据，<strong>不能直接读磁盘</strong>——这是硬件铁律。</li>
+</ul>
+<p>所以任何程序要跑，<strong>第一步必须是”从磁盘搬进内存”</strong>。这就是”装载”这件事存在的根本原因。</p>
+<p><strong>2. 地址（address）——给内存每个格子编号</strong></p>
+<p>内存被切成一个个存储单元（以字节为单位），每个单元有一个编号，这个编号就是地址。CPU 靠”给个地址”来定位要读写哪个字节。</p>
+<p><strong>3. 物理地址 vs 虚拟地址</strong>（本节最核心的一对概念）</p>
+<ul>
+<li><strong>物理地址</strong>：内存条硬件上<strong>真实存在</strong>的存储单元编号。一萝卜一个坑。</li>
+<li><strong>虚拟地址</strong>：程序”以为”自己用的地址。操作系统给每个进程一个假象：”你独占一整条内存，从 0 开始编号”。</li>
+</ul>
+<p>程序里写的一切地址（变量地址、函数地址）<strong>全是虚拟地址</strong>，CPU 执行时要靠硬件把虚拟地址翻译成物理地址才真正读写。</p>
+<p><strong>4. MMU（内存管理单元）——翻译地址的硬件</strong></p>
+<p>干”虚拟地址 → 物理地址”翻译这件事的，是 CPU 芯片内部的一块硬件，叫 <strong>MMU</strong>（Memory Management Unit）。它像一个极快的”查表机器”：拿到虚拟地址，查一张对照表，吐出物理地址。整个过程对程序透明——程序完全不知道、也不需要知道自己被翻译到了哪。</p>
+<p><strong>5. 页（page）——内存管理的”最小单位”</strong></p>
+<p>操作系统管理内存不是按字节管的（太碎、太低效），而是按<strong>固定大小的块</strong>管，这个块叫<strong>页</strong>。x86-64 上常规页大小是 <strong>4KB</strong>（4096 字节）。虚拟地址空间和物理内存都被切成同样大小的页：虚拟地址空间里叫”页”，物理内存里对应的叫”页框&#x2F;帧”。</p>
+<p><strong>6. 页表（page table）——那张对照表</strong></p>
+<p>MMU 翻译地址靠的对照表就是<strong>页表</strong>。它记录着”哪个虚拟页，对应哪个物理页框，有什么权限”。每个进程有自己的页表。</p>
+<p><strong>7. 缺页（page fault）——“发现书不在书桌上”</strong></p>
+<p>程序访问某个虚拟地址时，MMU 查页表发现这个页<strong>根本没被装进物理内存</strong>（可能还在磁盘上、或压根没分配），就会触发一次<strong>缺页异常</strong>，把控制权交给操作系统。操作系统去把对应的页从磁盘读进内存、更新页表，再让程序接着跑。</p>
+<p><strong>8. 页面置换 &#x2F; 换入换出（swap in &#x2F; swap out）</strong></p>
+<p>物理内存有限，书桌就那么大。当书桌满了还要放新书，就得把某本<strong>不常用的书先放回书柜</strong>（换出），腾出位置。这个过程就是页面置换。怎么决定”踢哪本”？靠<strong>置换算法</strong>（下面 LRU 就是最常用的一种）。</p>
+<p><strong>9. LRU（最近最少使用）算法</strong></p>
+<p>置换算法的一种。核心思想：<strong>最近这段时间最少被用到的页，最可能将来也用不到，优先踢它</strong>。</p>
+<p><strong>10. 装载（load）与装载器（loader）</strong></p>
+<ul>
+<li><strong>装载</strong>：把磁盘上的程序文件搬进内存、布置好，让它具备运行条件的过程。</li>
+<li><strong>装载器</strong>：干这件事的系统组件。</li>
+</ul>
+<p><strong>11. 内存映射（mmap 映射）</strong></p>
+<p>把文件或内存的某块区域，直接”挂”到进程虚拟地址空间的某个地址范围上的操作。挂上之后，访问那段虚拟地址，就等于访问那个文件&#x2F;内存。这是”程序装载”在实现层面的关键技术——不是把整个文件复制进内存，而是”建立文件与虚拟地址的对应关系”。</p>
+<h1 id="程序装载：怎么把一个-ELF-文件变成跑起来的进程"><a href="#程序装载：怎么把一个-ELF-文件变成跑起来的进程" class="headerlink" title="程序装载：怎么把一个 ELF 文件变成跑起来的进程"></a>程序装载：怎么把一个 ELF 文件变成跑起来的进程</h1><h2 id="1-为什么”装载”这件事非做不可"><a href="#1-为什么”装载”这件事非做不可" class="headerlink" title="1. 为什么”装载”这件事非做不可"></a>1. 为什么”装载”这件事非做不可</h2><p>回到最底层的物理事实：<strong>CPU 只能直接读写内存，不能直接读磁盘</strong>。而刚学完的 ELF 文件（<code>elfExample</code>）此刻还静静躺在磁盘上。所以程序要运行，第一个动作必然是：把它从磁盘搬进内存，并按照它自己的”说明书”（就是上章的<strong>程序头表</strong>）布置好每一块。</p>
+<h2 id="2-装载分三步（这是本节”程序装载”的主线）"><a href="#2-装载分三步（这是本节”程序装载”的主线）" class="headerlink" title="2. 装载分三步（这是本节”程序装载”的主线）"></a>2. 装载分三步（这是本节”程序装载”的主线）</h2><p>把 Linux 下 ELF 的装载归纳为三步：</p>
+<p><strong>第一步：读 ELF 文件头，确认”这是什么文件”</strong></p>
+<p>装载器拿到一个文件，先读最开头的 <strong>ELF 文件头</strong>。这步的目的就一个——<strong>验明正身、摸清底细</strong>：它是 32 位还是 64 位？是小端还是大端？是哪种类型（REL&#x2F;EXEC&#x2F;DYN）？入口点在哪？</p>
+<p>必须先看头<strong>不同类型的文件，装载方式完全不同</strong></p>
+<p><strong>第二步：按程序头表，把各个段映射进虚拟内存</strong></p>
+<p>确认是可执行文件后，装载器读<strong>程序头表</strong>，重点是里面的 <strong>PT_LOAD 段</strong>（只有 PT_LOAD 是真正要占内存的段）。每一个 PT_LOAD 表项都写着：”从文件第 X 字节搬、搬到虚拟地址 Y、多大、什么权限”。</p>
+<p>装载器据此做的是<strong>内存映射</strong>，而不是傻乎乎地把整个文件复制一遍：把文件的某段（比如代码段）映射到虚拟地址空间的某段，把数据段映射到另一段。代码段落在低地址的可执行区，数据段落在稍高地址的可写区。</p>
+<p>关键点：<strong>这一步建立的是”对应关系”，不一定是”立即搬运”</strong>。真正的内容可能等程序访问到那里才按页读进来（这就是”缺页”要讲的）。</p>
+<p><strong>第三步：重定位（如果需要）</strong></p>
+<p>如果程序里有”地址引用”是相对位置不确定的（尤其共享库），装载器要修正这些引用，让它们指向正确的内存地址。这一步和之前学的”.rela 重定位表”是同一机制在运行时的体现。</p>
+<blockquote>
+<p>这里有个<strong>容易混的点</strong>：对普通的可执行文件 <code>elfExample</code> 来说，地址在链接阶段就已经定死了（上一课看到入口点固定是 <code>0x400430</code>），所以<strong>装载时其实不需要做大的重定位</strong>。真正需要运行时重定位的是<strong>共享库 .so</strong>——因为它被加载到哪个地址，要到运行时才知道。所以”第三步”严格说是”视情况而定”。<strong>可执行文件基本不用重定位，共享库才需要</strong>。</p>
+</blockquote>
+<h2 id="3-装载完成后的”进程内存全景”"><a href="#3-装载完成后的”进程内存全景”" class="headerlink" title="3. 装载完成后的”进程内存全景”"></a>3. 装载完成后的”进程内存全景”</h2><p>装载结束后，进程的虚拟地址空间长什么样？用一句话概括：</p>
+<p><strong>从低地址到高地址，大致是：代码段（只读可执行）→ 数据段（可读写）→ 堆（往上长）→ …… → 栈（往下长）→ 内核保留区</strong>。</p>
+<ul>
+<li><strong>代码段</strong>：<code>.text</code>，只读可执行（RX），装着机器指令。</li>
+<li><strong>数据段</strong>：<code>.data</code> + <code>.bss</code>，可读写（RW），装着全局&#x2F;静态变量。</li>
+<li><strong>堆（heap）</strong>：程序运行时用 <code>malloc</code> 动态要来的内存，从低往高长。</li>
+<li><strong>栈（stack）</strong>：函数的临时开销（局部变量、返回地址），从高往低长。</li>
+<li><strong>共享库映射区</strong>：<code>libc.so</code> 等被加载进来的位置（通常在堆和栈之间）。</li>
+</ul>
+<p><em>这张”地图”是后面漏洞利用的地基</em></p>
+<h1 id="虚拟内存：操作系统怎么”骗”程序"><a href="#虚拟内存：操作系统怎么”骗”程序" class="headerlink" title="虚拟内存：操作系统怎么”骗”程序"></a>虚拟内存：操作系统怎么”骗”程序</h1><h2 id="1-虚拟内存要解决的核心问题"><a href="#1-虚拟内存要解决的核心问题" class="headerlink" title="1. 虚拟内存要解决的核心问题"></a>1. 虚拟内存要解决的核心问题</h2><p>一句话：<strong>让每个进程以为自己独占一整条内存，而且可以比真实物理内存还大</strong>。它同时解决三个问题：</p>
+<ul>
+<li><strong>隔离</strong>：进程 A 摸不到进程 B 的内存，一个崩了不拖累别人。</li>
+<li><strong>省内存</strong>：很多程序共用同一份库代码，内存里只放一份。</li>
+<li><strong>够大</strong>：物理内存可能只有 8GB，但程序可以”以为”自己有几十 GB 甚至更多（多出来的靠磁盘顶上）。</li>
+</ul>
+<h2 id="2-地址翻译：MMU-页表，全程"><a href="#2-地址翻译：MMU-页表，全程" class="headerlink" title="2. 地址翻译：MMU + 页表，全程"></a>2. 地址翻译：MMU + 页表，全程</h2><p>这是虚拟内存的<strong>心脏</strong>：</p>
+<p>程序跑起来，CPU 要访问某个地址——它拿到的<strong>永远是虚拟地址</strong>。流程是：</p>
+<ol>
+<li>CPU 把虚拟地址交给 MMU；</li>
+<li>MMU 拿这个虚拟地址去<strong>查页表</strong>；</li>
+<li>页表给出”这个虚拟页对应哪个物理页框”，再加上页内偏移，得到<strong>物理地址</strong>；</li>
+<li>用物理地址去真正读写内存。</li>
+</ol>
+<p>一个虚拟地址在结构上被拆成两截：<strong>虚拟页号（高位）+ 页内偏移（低位）</strong>。页号用来查页表找物理页框，偏移不变直接拼上。比如：虚拟地址”3 栋 502 室”——“3 栋”是页号（查表看 3 栋实际是哪栋楼），”502”是偏移（楼内位置不变）。</p>
+<h2 id="3-缺页：虚拟内存”骗人”的关键戏法"><a href="#3-缺页：虚拟内存”骗人”的关键戏法" class="headerlink" title="3. 缺页：虚拟内存”骗人”的关键戏法"></a>3. 缺页：虚拟内存”骗人”的关键戏法</h2><p>这是”程序以为内存很大”的真相所在：</p>
+<p>程序访问某个虚拟地址时，MMU 查页表，可能出现一种情况——<strong>这个页根本没在物理内存里</strong>（要么在磁盘上，要么压根还没分配）。这时：</p>
+<ol>
+<li>MMU 触发<strong>缺页异常</strong>，把控制权交给操作系统；</li>
+<li>操作系统暂停这个进程，去磁盘把需要的页读进物理内存；</li>
+<li>更新页表，让这个虚拟页指向刚读进来的物理页框；</li>
+<li>进程从刚才断掉的地方<strong>继续执行</strong>，好像什么都没发生过。</li>
+</ol>
+<p>关键洞察：<strong>进程从头到尾都不知道自己被暂停过、不知道自己的数据其实有一部分躺在磁盘上</strong>。它眼里的”我有一大片连续内存”，其实是一堆”有的在内存、有的在磁盘”的页拼出来的幻觉。</p>
+<h2 id="4-内存不够了：置换算法"><a href="#4-内存不够了：置换算法" class="headerlink" title="4. 内存不够了：置换算法"></a>4. 内存不够了：置换算法</h2><p>书桌（物理内存）满了，还要放新书，就得<strong>换出</strong>一本旧的。怎么选？这就是置换算法。比如 <strong>LRU（最近最少使用）</strong>：</p>
+<ul>
+<li>维护”每页上次被用是什么时候”的记录；</li>
+<li>要腾位置时，踢掉”最久没被用过”的那一页；</li>
+<li>理由：最近不用的，大概率接下来也不用。</li>
+</ul>
+<blockquote>
+<p><strong>拓展</strong>：置换如果做得不好，会出现”抖动”（thrashing）——程序频繁访问的页反复被换出又换入，系统花在磁盘搬运上的时间比真正干活还多，表现就是电脑卡成狗。磁盘比内存慢几个数量级，这是虚拟内存的<strong>代价</strong>：换来”够大”，付出”可能变慢”。</p>
+</blockquote>
+<h2 id="5-内存保护：虚拟内存的第二重身份"><a href="#5-内存保护：虚拟内存的第二重身份" class="headerlink" title="5. 内存保护：虚拟内存的第二重身份"></a>5. 内存保护：虚拟内存的第二重身份</h2><p>虚拟内存不只是”让内存变大”，还顺带实现了<strong>权限隔离</strong>，这正是它和安全直接挂钩的地方（下面拓展展开）。页表里每个条目除了记”映射到哪”，还记着<strong>权限位</strong>：可读 R、可写 W、可执行 X。程序试图访问没有权限的地址，CPU 直接报错、杀死进程——“段错误（Segmentation Fault）”就是这么来的。</p>
+<h1 id="配套工具"><a href="#配套工具" class="headerlink" title="配套工具"></a>配套工具</h1><p><strong>1. pmap ——看进程的内存地图</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pmap 1234          <span class="hljs-comment"># 1234 换成真实进程号</span><br></code></pre></td></tr></table></figure>
+
+<p>会打印这个进程的<strong>整张内存布局表</strong>：每一段从哪个地址开始、多大、什么权限、对应哪个文件&#x2F;库。这就是把第一部分”装载后的进程内存全景”<strong>亲眼打印出来</strong>。做 PWN 时第一步往往就是 <code>pmap</code> 看一眼目标进程的布局。</p>
+<p>那进程号（PID）怎么来？先用 <code>ps</code> 或直接记下程序运行时的进程号。或者配合 <code>pgrep 程序名</code> 查。</p>
+<p><strong>2. gdb 的 info proc mappings——调试器里看内存</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">gdb ./elfExample<br>(gdb) info proc mappings<br></code></pre></td></tr></table></figure>
+
+<p>和 <code>pmap</code> 一个作用，但在调试器里，可以和断点配合，边跑边看内存当前状态。<code>gdb</code> 之前讲过用法，这里不再重复它的基础。</p>
+<p><strong>3. valgrind——内存错误检测器</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">valgrind --leak-check=full ./elfExample<br></code></pre></td></tr></table></figure>
+
+<p>它会<strong>模拟一个带严格检查的内存环境</strong>跑你的程序，抓出”非法内存访问、内存泄漏”这类错误。它把”内存保护”这件事变得<strong>可观察</strong>——你写错越界，它直接告诉你在哪一行越的界。注意：valgrind 跑得比正常慢很多，因为它全程软件模拟，别拿它测性能。</p>
+<p><strong>4. lscpu 和 top</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">lscpu    <span class="hljs-comment"># 看 CPU 架构、核心数、线程数</span><br>top      <span class="hljs-comment"># 实时看各进程 CPU、内存占用，按 q 退出</span><br></code></pre></td></tr></table></figure>
+
+<p><code>lscpu</code> 一眼看清你的 CPU 是不是 64 位（关系到 ELF 是 ELF32 还是 ELF64）；<code>top</code> 看进程实况。</p>
+<hr>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/PWN/" class="category-chain-item">PWN</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/PWN/ELF%E6%96%87%E4%BB%B6/" class="category-chain-item">ELF文件</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>程序装载与虚拟内存</div>
+      <div>https://asleo814.github.io/2026/09/24/程序装载与虚拟内存/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>AsLeo</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年9月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/09/23/ELF%E6%96%87%E4%BB%B6%E6%A6%82%E8%BF%B0/" title="ELF文件概述">
+                        <span class="hidden-mobile">ELF文件概述</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/home-banner-video.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
