@@ -19,22 +19,21 @@
   <meta name="author" content="AsLeo">
   <meta name="keywords" content="">
   
-    <meta name="description" content="面向对象类和对象类类是用来对一个实体(对象)来进行描述的，主要描述该实体(对象)具有哪些属性(外观尺寸等)，哪些功能(用来干啥)，描述完成后计算机就可以识别了 比如想造很多自行车，类就会像一个设计图：要多少轮子、有没有车铃、车把手在哪里。 定义类的语法123456[修饰符] class 类名&#123;    零到多个构造器定义..    零到多个成员变量..    零到多个方法&#125;">
+    <meta name="description" content="前置知识寄存器（register）CPU 芯片内部自带的一排”随身小抽屉”——数量极少（十几个）、速度极快的存储格。CPU 做任何运算，数据都得先搬进寄存器才能动手。寄存器快到什么程度？访问一次寄存器约 1 个时钟周期，而访问内存要 100 多个周期，差了两个数量级。 程序计数器 PC（Program Counter）一个专门记”下一条要执行的指令在哪”的寄存器。它永远指向”接下来该执行哪条指令的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java 基础">
-<meta property="og:url" content="https://asleo814.github.io/2026/09/07/java%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:title" content="CPU与进程的执行">
+<meta property="og:url" content="https://asleo814.github.io/2026/09/27/CPU%E4%B8%8E%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%89%A7%E8%A1%8C/index.html">
 <meta property="og:site_name" content="AsLeo的博客">
-<meta property="og:description" content="面向对象类和对象类类是用来对一个实体(对象)来进行描述的，主要描述该实体(对象)具有哪些属性(外观尺寸等)，哪些功能(用来干啥)，描述完成后计算机就可以识别了 比如想造很多自行车，类就会像一个设计图：要多少轮子、有没有车铃、车把手在哪里。 定义类的语法123456[修饰符] class 类名&#123;    零到多个构造器定义..    零到多个成员变量..    零到多个方法&#125;">
+<meta property="og:description" content="前置知识寄存器（register）CPU 芯片内部自带的一排”随身小抽屉”——数量极少（十几个）、速度极快的存储格。CPU 做任何运算，数据都得先搬进寄存器才能动手。寄存器快到什么程度？访问一次寄存器约 1 个时钟周期，而访问内存要 100 多个周期，差了两个数量级。 程序计数器 PC（Program Counter）一个专门记”下一条要执行的指令在哪”的寄存器。它永远指向”接下来该执行哪条指令的">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-09-06T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-27T06:38:37.191Z">
+<meta property="article:published_time" content="2026-09-27T04:59:11.000Z">
+<meta property="article:modified_time" content="2026-09-27T07:41:03.487Z">
 <meta property="article:author" content="AsLeo">
-<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Java 基础 - AsLeo的博客</title>
+  <title>CPU与进程的执行 - AsLeo的博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -281,7 +280,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Java 基础"></span>
+            <span id="subtitle" data-typed-text="CPU与进程的执行"></span>
           
         </div>
 
@@ -292,8 +291,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-09-07 00:00" pubdate>
-          2026年9月7日 凌晨
+        <time datetime="2026-09-27 12:59" pubdate>
+          2026年9月27日 下午
         </time>
       </span>
     
@@ -304,7 +303,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.2k 字
+          3.3k 字
         
       </span>
     
@@ -315,7 +314,7 @@
         
         
         
-          19 分钟
+          28 分钟
         
       </span>
     
@@ -354,90 +353,92 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Java 基础</h1>
+            <h1 id="seo-header">CPU与进程的执行</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h1><h2 id="类和对象"><a href="#类和对象" class="headerlink" title="类和对象"></a>类和对象</h2><h3 id="类"><a href="#类" class="headerlink" title="类"></a>类</h3><p>类是用来对一个实体(对象)来进行描述的，主要描述该实体(对象)具有哪些属性(外观尺寸等)，哪些功能(用来干啥)，描述完成后计算机就可以识别了</p>
-<p>比如想造很多自行车，类就会像一个设计图：要多少轮子、有没有车铃、车把手在哪里。</p>
-<h4 id="定义类的语法"><a href="#定义类的语法" class="headerlink" title="定义类的语法"></a>定义类的语法</h4><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs perl">[修饰符] <span class="hljs-class"><span class="hljs-keyword">class</span> 类名</span><br><span class="hljs-class"></span>&#123;<br>    零到多个构造器定义..<br>    零到多个成员变量..<br>    零到多个方法<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h1><h2 id="寄存器（register）"><a href="#寄存器（register）" class="headerlink" title="寄存器（register）"></a><strong>寄存器（register）</strong></h2><p>CPU 芯片内部自带的一排”随身小抽屉”——数量极少（十几个）、速度极快的存储格。CPU 做任何运算，数据都得先搬进寄存器才能动手。寄存器快到什么程度？访问一次寄存器约 1 个时钟周期，而访问内存要 100 多个周期，差了两个数量级。</p>
+<h2 id="程序计数器-PC（Program-Counter）"><a href="#程序计数器-PC（Program-Counter）" class="headerlink" title="程序计数器 PC（Program Counter）"></a><strong>程序计数器 PC（Program Counter）</strong></h2><p>一个<strong>专门记”下一条要执行的指令在哪”的寄存器</strong>。它永远指向”接下来该执行哪条指令的地址”，CPU 每取完一条指令，PC 就自动往前挪，指向下一条。没有它，CPU 就不知道该干到哪了。</p>
+<h2 id="指令寄存器-IR（Instruction-Register）"><a href="#指令寄存器-IR（Instruction-Register）" class="headerlink" title="指令寄存器 IR（Instruction Register）"></a><strong>指令寄存器 IR（Instruction Register）</strong></h2><p>CPU 从内存里<strong>刚取出来的那条指令，先临时放在这里</strong>，等译码器来读它。</p>
+<h2 id="时钟周期-主频（clock-frequency）"><a href="#时钟周期-主频（clock-frequency）" class="headerlink" title="时钟周期 &#x2F; 主频（clock &#x2F; frequency）"></a><strong>时钟周期 &#x2F; 主频（clock &#x2F; frequency）</strong></h2><p>CPU 内部有一个”节拍器”（时钟），每敲一下，就推动芯片各部件往前走一步。这个节拍的频率就是<strong>主频</strong>，单位 Hz（赫兹）。3.5 GHz 就是每秒敲 35 亿下。所有部件都靠这个统一节拍协同工作。</p>
+<h2 id="缓存（cache）"><a href="#缓存（cache）" class="headerlink" title="缓存（cache）"></a><strong>缓存（cache）</strong></h2><p>CPU 和内存之间的一层”中转加速器”，因为内存太慢，CPU 等不起。缓存把”最近&#x2F;最可能用到的数据”提前搬到离 CPU 更近、更快的地方。它分三级：</p>
+<ul>
+<li><strong>L1</strong>：最快、最小（32~64KB），还分成”指令缓存”和”数据缓存”两半；</li>
+<li><strong>L2</strong>：次快（256KB~1MB）；</li>
+<li><strong>L3</strong>：最大（几 MB~几十 MB），多个核心共享。</li>
+</ul>
+<h2 id="局部性原理（locality）——缓存为什么有用的根因"><a href="#局部性原理（locality）——缓存为什么有用的根因" class="headerlink" title="局部性原理（locality）——缓存为什么有用的根因"></a><strong>局部性原理（locality）——缓存为什么有用的根因</strong></h2><p>缓存不是瞎存的，它赌的是<strong>局部性</strong>这条规律：程序倾向于反复访问同一小片数据&#x2F;指令。分两种：</p>
+<ul>
+<li><strong>时间局部性</strong>：刚用过的，很快还会再用（循环里那条指令被执行一万遍）；</li>
+<li><strong>空间局部性</strong>：用到一个地址，它旁边的也快被用了（遍历数组，读完 a[0] 读 a[1]）。</li>
+</ul>
+<p>统计上”程序 90% 时间跑在 10% 的代码上”。所以缓存命中率能到 95% 以上。</p>
+<h2 id="进程（process）"><a href="#进程（process）" class="headerlink" title="进程（process）"></a><strong>进程（process）</strong></h2><p>程序是磁盘上那个静态文件；进程是程序<strong>被跑起来的那一次执行</strong>，是活的、动态的。同一个程序跑两次，就是两个进程。</p>
+<h2 id="进程状态（三态-五态）"><a href="#进程状态（三态-五态）" class="headerlink" title="进程状态（三态 &#x2F; 五态）"></a><strong>进程状态（三态 &#x2F; 五态）</strong></h2><p>进程在生命周期里会在几个状态之间跳来跳去，最基本的三个：</p>
+<ul>
+<li><strong>就绪态</strong>：万事俱备，只等 CPU（在排队）；</li>
+<li><strong>运行态</strong>：正占着 CPU 干活；</li>
+<li><strong>阻塞态</strong>：干不下去，在等某件事（比如等键盘输入、等磁盘读完），把 CPU 让给别人。</li>
+</ul>
+<p>还有两个补充状态（凑成五态）：<strong>新建态</strong>（刚创建、还没就绪）、<strong>终止态</strong>（执行完毕）。</p>
+<h2 id="上下文切换（context-switch）"><a href="#上下文切换（context-switch）" class="headerlink" title="上下文切换（context switch）"></a><strong>上下文切换（context switch）</strong></h2><p>CPU 只有一个，进程有几十上百个，怎么做到”看起来都在同时跑”？靠<strong>快速轮流</strong>。每次从进程 A 换到进程 B，得先把 A 的”现场”保存下来（它的寄存器值、PC 值、栈指针……），再把 B 的现场恢复出来。这个”保存 A 现场 + 恢复 B 现场”的动作，就叫上下文切换。”上下文”就是”一个进程跑到现在这一刻的全部状态”。</p>
+<h2 id="时间片（time-slice）"><a href="#时间片（time-slice）" class="headerlink" title="时间片（time slice）"></a><strong>时间片（time slice）</strong></h2><p>“轮流跑”的节奏单位。操作系统给每个进程一小段固定的 CPU 时间（比如几毫秒到几十毫秒），用完了就强制换下一个。这一小段就是时间片。</p>
+<h2 id="调度（scheduling）与调度器（scheduler）"><a href="#调度（scheduling）与调度器（scheduler）" class="headerlink" title="调度（scheduling）与调度器（scheduler）"></a><strong>调度（scheduling）与调度器（scheduler）</strong></h2><p>操作系统里专门负责”决定<strong>下一个让谁上 CPU</strong>“的模块，叫调度器；它做决定这件事叫调度。怎么选、按什么规则选，就是<strong>调度算法</strong>。</p>
+<h2 id="系统调用-内核态与用户态"><a href="#系统调用-内核态与用户态" class="headerlink" title="系统调用 &#x2F; 内核态与用户态"></a><strong>系统调用 &#x2F; 内核态与用户态</strong></h2><ul>
+<li><strong>用户态</strong>：普通程序运行时处于的”受限模式”，只能碰自己的内存，很多危险操作（直接操作硬件）不让做。</li>
+<li><strong>内核态</strong>：操作系统的核心代码运行时的”特权模式”，什么都能干。</li>
+<li><strong>系统调用</strong>：程序从用户态”请求”进入内核态去办大事的合法入口（比如读写文件、创建进程）。</li>
+</ul>
+<h1 id="CPU怎么执行指令"><a href="#CPU怎么执行指令" class="headerlink" title="CPU怎么执行指令"></a>CPU怎么执行指令</h1><h2 id="指令周期"><a href="#指令周期" class="headerlink" title="指令周期"></a>指令周期</h2><h3 id="取指（Fetch）"><a href="#取指（Fetch）" class="headerlink" title="取指（Fetch）"></a><strong>取指（Fetch）</strong></h3><p>CPU 看 PC 指到哪，去那里把下一条指令从内存（实际大多从缓存）读出来，放进 IR；同时 PC 自动加一，指向下一条。</p>
+<h3 id="译码（Decode）"><a href="#译码（Decode）" class="headerlink" title="译码（Decode）"></a><strong>译码（Decode）</strong></h3><p>译码器读 IR 里的二进制指令，搞清楚”这条是要干嘛？用什么数据？结果放哪？”。机器码是一串人看不懂的 0&#x2F;1，这一步把它翻译成”行动指令”。</p>
+<h3 id="执行（Execute）"><a href="#执行（Execute）" class="headerlink" title="执行（Execute）"></a><strong>执行（Execute）</strong></h3><p>真正动手——算术逻辑单元（ALU）做加减乘除、逻辑运算，或者算出一个内存地址。</p>
+<h3 id="访存（Memory-Access）"><a href="#访存（Memory-Access）" class="headerlink" title="访存（Memory Access）"></a><strong>访存（Memory Access）</strong></h3><p>如果这条指令要读写内存（比如”把某地址的值取来”），就在这一步去访问内存。</p>
+<h3 id="写回（Write-Back）"><a href="#写回（Write-Back）" class="headerlink" title="写回（Write Back）"></a><strong>写回（Write Back）</strong></h3><p>把结果存回寄存器或内存，并更新一些”状态标志”（比如结果是正、是零、还是溢出）。</p>
+<p>然后 PC 已经指向下一条，<strong>回到 ① 循环</strong>，每秒重复几十亿次。</p>
+<h2 id="为什么处理的快"><a href="#为什么处理的快" class="headerlink" title="为什么处理的快"></a>为什么处理的快</h2><h3 id="流水线"><a href="#流水线" class="headerlink" title="流水线"></a>流水线</h3><p>把指令周期拆成好几个阶段，像工厂流水线——第 1 条在执行时，第 2 条在译码、第 3 条在取指，<strong>同时进行</strong>。</p>
+<h3 id="超标量"><a href="#超标量" class="headerlink" title="超标量"></a>超标量</h3><p>干脆开<strong>多条流水线</strong>，一个周期同时发射好几条指令。</p>
+<h3 id="乱序执行"><a href="#乱序执行" class="headerlink" title="乱序执行"></a>乱序执行</h3><p>有些指令互相依赖（要等结果），有些独立。CPU 会<strong>跳过正在等待的指令，先执行后面不依赖它的指令</strong>，最后再把结果按正确顺序”归位”。</p>
+<h3 id="分支预测"><a href="#分支预测" class="headerlink" title="分支预测"></a>分支预测</h3><p>遇到 <code>if</code>、循环这种”要跳转”的指令，CPU 得猜”跳还是不跳”，提前把猜的那条路取进来。猜对了省时间，猜错了就”清空流水线”重来。</p>
+<h2 id="进程怎么被“轮流”执行"><a href="#进程怎么被“轮流”执行" class="headerlink" title="进程怎么被“轮流”执行"></a>进程怎么被“轮流”执行</h2><h3 id="进程状态机：在三个态之间跳"><a href="#进程状态机：在三个态之间跳" class="headerlink" title="进程状态机：在三个态之间跳"></a>进程状态机：在三个态之间跳</h3><p>看它<strong>活着时的状态变化</strong>。把三态串成一张状态机：</p>
+<ul>
+<li><strong>就绪 → 运行</strong>：调度器选中它，给它 CPU（被动）；</li>
+<li><strong>运行 → 就绪</strong>：时间片用完了，或被更高优先级进程抢了 CPU（被动让出）；</li>
+<li><strong>运行 → 阻塞</strong>：自己主动等 I&#x2F;O、等锁，把 CPU 让出来（主动让出）；</li>
+<li><strong>阻塞 → 就绪</strong>：等的资源到了，被操作系统唤醒，重新排队（被动）。</li>
+</ul>
+<p>关键要记住一个区别：<strong>“运行→就绪”是被抢走的（被动），”运行→阻塞”是自己让出来的（主动）</strong>。</p>
+<h3 id="上下文切换：为什么能”同时跑很多程序”"><a href="#上下文切换：为什么能”同时跑很多程序”" class="headerlink" title="上下文切换：为什么能”同时跑很多程序”"></a>上下文切换：为什么能”同时跑很多程序”</h3><p>CPU 就一个（先不考虑多核），几十个进程却像同时在跑，本质就是<strong>高频地切换 + 每个进程切一小片</strong>。</p>
+<p>切换时要做的事：</p>
+<ol>
+<li><strong>保存</strong>当前进程的”现场”：所有寄存器值、PC（执行到哪了）、栈指针等；</li>
+<li><strong>恢复</strong>下一个进程之前保存的”现场”；</li>
+<li>让 CPU 从下一个进程上次停的地方接着跑。</li>
+</ol>
+<p>每个进程都以为自己”独占 CPU、连续地跑”，其实是被切成无数小片轮着跑的。</p>
+<p><strong>为什么切换有成本</strong>：切换本身不免费。要花时间保存&#x2F;恢复寄存器、PC、内核栈；更贵的是<strong>进程级切换要换页表，导致 TLB（一种地址翻译的缓存）失效、缓存命中率下降</strong>。所以时间片不能切太小，否则光切换的开销就吃掉大半 CPU。这就是”时间片大小的权衡”：<strong>太大 → 响应慢（一个程序霸着 CPU）；太小 → 切换开销爆炸</strong>。</p>
+<h3 id="调度算法家族"><a href="#调度算法家族" class="headerlink" title="调度算法家族"></a>调度算法家族</h3><p>调度器怎么选”下一个让谁上”？常见的五种：</p>
+<ul>
+<li><strong>先来先服务 FCFS</strong>：谁先来谁先上，简单公平，但短任务会被前面长任务堵很久；</li>
+<li><strong>短作业优先 SJF</strong>：谁短先做谁，平均等待最短，但长任务可能一直饿死（饥饿）；</li>
+<li><strong>优先级调度</strong>：按优先级，高的先跑；低优先级可能饿死（可用”老化”补救——等越久优先级越高）；</li>
+<li><strong>时间片轮转 RR</strong>：排成队，每人轮一小片，兼顾公平和响应，适合分时系统；</li>
+<li><strong>多级反馈队列 MLFQ</strong>：综合方案，多个优先级队列，兼顾交互响应和吞吐，是主流 OS 的思路（Linux 的 CFS 调度器就是在”按虚拟运行时间公平调度”上做的实现）。</li>
+</ul>
+<p>像食堂窗口——FCFS 是”老实排队”；SJF 是”谁吃得快谁先来”；优先级是”VIP 插队”；RR 是”每人限时 5 分钟”；MLFQ 是”新来的先给一小段试试，表现好的往上提”。</p>
+<h2 id="这节工具"><a href="#这节工具" class="headerlink" title="这节工具"></a>这节工具</h2><p><strong>1. lscpu——看 CPU 的”身份证”</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">lscpu<br></code></pre></td></tr></table></figure>
 
+<p>输出你的 CPU 架构（x86-64 还是 ARM）、核心数、线程数、缓存大小（L1&#x2F;L2&#x2F;L3）、主频。这节讲的”架构、寄存器位数、缓存”全都能在这条命令里对上号。</p>
+<p><strong>2. top——实时看进程”抢 CPU”</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">top          <span class="hljs-comment"># 按 q 退出</span><br></code></pre></td></tr></table></figure>
 
+<p>实时显示每个进程的 CPU 占用率、内存占用、状态（R&#x3D;运行、S&#x3D;睡眠&#x2F;阻塞）。这节讲的”调度、时间片、进程状态”在这里是<strong>活的</strong>——可以看到 CPU 占用率在进程之间不停地跳。</p>
+<p><strong>3. gdb 的 info registers——看寄存器现场</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">gdb ./elfExample<br>(gdb) info registers<br></code></pre></td></tr></table></figure>
 
-<h4 id="类的使用"><a href="#类的使用" class="headerlink" title="类的使用"></a>类的使用</h4><h5 id="最简单的代码"><a href="#最简单的代码" class="headerlink" title="最简单的代码"></a>最简单的代码</h5><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs perl">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student</span> </span>&#123;<br>    String name;<br>    <span class="hljs-keyword">int</span> age;<br>    <br>    void <span class="hljs-keyword">study</span>()&#123;<br>        System.out.println(<span class="hljs-string">&quot;我在学习&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>打印所有寄存器的当前值（RAX、RBX、RSP、RBP、RIP……）。这节讲的”寄存器、PC、上下文”在这里能看到——RIP 就是那个”程序计数器”，<code>info registers</code> 时它指向的就是下一条要执行的指令地址。</p>
 
-
-
-<p><strong>pubilc class Student</strong>:定义一个叫”Student“的模板</p>
-<p>class：我要定义一个类</p>
-<p>Student：类的名字叫Student</p>
-<p>public：公开的，别的地方也能用它</p>
-<p><strong>String name;</strong></p>
-<p>表示：学生有名字，name是这个名字的变量；String就是存放文字的地方</p>
-<p><strong>void study()</strong></p>
-<p>学生有个行为，叫study；()这里先留空，表示这个行为现在不需要别人传东西进来</p>
-<p>void：这个方法执行完以后，不需要返回一个结果</p>
-<p><strong>{….}</strong></p>
-<p>大括号里面的内容，就是这个方法在做的事，当调用study时，程序会打印”我在学习“</p>
-<h5 id="定义电脑这个类"><a href="#定义电脑这个类" class="headerlink" title="定义电脑这个类"></a>定义电脑这个类</h5><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Computer</span>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> brand;<span class="hljs-comment">// 品牌</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> <span class="hljs-keyword">type</span>;<span class="hljs-comment">// 型号</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> color;<span class="hljs-comment">// 颜色</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">openComputer</span>(<span class="hljs-params"></span>)&#123;<br>        <span class="hljs-title class_">System</span>.<span class="hljs-property">out</span>.<span class="hljs-title function_">println</span>(<span class="hljs-string">&quot;开机&quot;</span>)；<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">watch</span>(<span class="hljs-params"></span>)&#123;<br>        <span class="hljs-title class_">System</span>.<span class="hljs-property">out</span>.<span class="hljs-title function_">println</span>(<span class="hljs-string">&quot;看电视&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">offComputer</span>(<span class="hljs-params"></span>)&#123; <br>       <span class="hljs-title class_">System</span>.<span class="hljs-property">out</span>.<span class="hljs-title function_">println</span>(<span class="hljs-string">&quot;关机&quot;</span>);<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-
-
-<h4 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a>成员变量</h4><p>成员变量就是<strong>写在类里，属于对象</strong>的<strong>数据</strong></p>
-<p>还是Student的例子</p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs perl">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student</span> </span>&#123;<br>    String name;<br>    <span class="hljs-keyword">int</span> age;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>这里 name 和 age 就是成员变量</p>
-<h5 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h5><p>用来保存对象的状态</p>
-<p>比如两个学生对象：</p>
-<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs abnf">Student s1 <span class="hljs-operator">=</span> new Student()<span class="hljs-comment">;</span><br>s1.name <span class="hljs-operator">=</span> <span class="hljs-string">&quot;张三&quot;</span><span class="hljs-comment">;</span><br>s1.age <span class="hljs-operator">=</span> <span class="hljs-number">18</span><span class="hljs-comment">;</span><br><br>Student s2 <span class="hljs-operator">=</span> new Student()<span class="hljs-comment">;</span><br>s2.name <span class="hljs-operator">=</span> <span class="hljs-string">&quot;李四&quot;</span><span class="hljs-comment">;</span><br>s2.age <span class="hljs-operator">=</span> <span class="hljs-number">20</span><span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
-
-<p>这里：s1 这个对象的名字是张三，年龄是18；s2 这个对象的名字是李四，年龄20</p>
-<p>虽然它们都叫Student ，但每个对象保存的数据不同</p>
-<h4 id="成员方法"><a href="#成员方法" class="headerlink" title="成员方法"></a>成员方法</h4><p><strong>成员方法</strong>就是“<strong>写在类里、属于对象</strong>的<strong>功能</strong>”</p>
-<p>比如</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">study</span>()</span> &#123;<br>    System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">&quot;我在学习&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>这个study()就是成员方法</p>
-<p>在Student这个类里，但属于张三(某个实例)的对象</p>
-<h3 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h3><h4 id="对象怎么创建"><a href="#对象怎么创建" class="headerlink" title="对象怎么创建"></a>对象怎么创建</h4><p>创建对象得用new</p>
-<p><code>Stdent s1 = new Student()</code></p>
-<p><code>Student</code>：对象类型，说明这是一个学生对象</p>
-<p><code>s1</code>：对象名字，方便后面使用</p>
-<p><code>new Student()</code>：真正创建一个新的 Student 对象</p>
-<p>按照模板student，造出一个实物本体（对象），贴上一个s1的标签，方便后续使用</p>
-<h4 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h4><p>举例：</p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span></span>&#123;<br><br>    A()&#123;<br>        <br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<h5 id="构造方法名字必须和类名完全一样"><a href="#构造方法名字必须和类名完全一样" class="headerlink" title="构造方法名字必须和类名完全一样"></a>构造方法名字必须和类名完全一样</h5><p>类叫A，构造方法就写A()，不能写a()、getA()</p>
-<h5 id="没有返回值，前面什么都不写"><a href="#没有返回值，前面什么都不写" class="headerlink" title="没有返回值，前面什么都不写"></a>没有返回值，前面什么都不写</h5><p>普通方法会写 void xxx(){}</p>
-<p>构造方法直接写 A(){}，前面不加任何返回类型</p>
-<h5 id="作用-1"><a href="#作用-1" class="headerlink" title="作用"></a>作用</h5><p><code>A b = new A()</code></p>
-<p>只要创建对象——写了 <code>new A()</code>、就会立刻调用A()构造方法——给新造出来的对象做初始化</p>
-<h5 id="默认自带的构造方法"><a href="#默认自带的构造方法" class="headerlink" title="默认自带的构造方法"></a>默认自带的构造方法</h5><p>如果写类A的时候，自己完全不写构造方法：</p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span></span>&#123;<br>    <span class="hljs-keyword">int</span> num;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>Java 会自己给自己加一个我看不见得构造方法</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">A</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-comment">//里面空的，什么也不做</span><br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>这叫<strong>默认无参构造</strong>，只要我再写任何一个构造方法，这个自带的构造方法就消失</p>
-<h5 id="自己写的构造方法-带初始内容"><a href="#自己写的构造方法-带初始内容" class="headerlink" title="自己写的构造方法(带初始内容)"></a>自己写的构造方法(带初始内容)</h5><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span></span>&#123;<br>    <span class="hljs-keyword">int</span> num;<br>    <br>    A()&#123;<br>        num = <span class="hljs-number">100</span>;   <span class="hljs-regexp">//</span>对象刚造出来，把num初始成<span class="hljs-number">100</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>这时执行 <code>A b = new A()</code>时，会自动运行A()，把这个对象的num直接设成100</p>
-<p>若有</p>
-<p><code>System.out.println(b.num);</code></p>
-<p>会输出<strong>100</strong></p>
-<h5 id="带参数的构造方法"><a href="#带参数的构造方法" class="headerlink" title="带参数的构造方法"></a>带参数的构造方法</h5><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span></span>&#123;<br>    <span class="hljs-keyword">int</span> num;<br>    <br>    A(<span class="hljs-keyword">int</span> n)&#123;<br>        num = n;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>现在创建对象就要给数字：</p>
-<p><code>A b = new A(50);</code></p>
-<p>常用：</p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs perl">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student</span></span>&#123;<br>    String name;<br>    <span class="hljs-keyword">int</span> age;<br>    <br>    Student(String n,<span class="hljs-keyword">int</span> a)&#123;<br>        name = n;<br>        age = a;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>使用时：</p>
-<p><code>Student s1 = new Student(&quot;张三&quot;, 18);</code></p>
-<h2 id=""><a href="#" class="headerlink" title=""></a></h2>
                 
               </div>
             
@@ -455,12 +456,12 @@
     
       <span class="category-chain">
         
-  <a href="/categories/WEB/" class="category-chain-item">WEB</a>
+  <a href="/categories/PWN/" class="category-chain-item">PWN</a>
   
   
     <span>></span>
     
-  <a href="/categories/WEB/Java/" class="category-chain-item">Java</a>
+  <a href="/categories/PWN/%E4%B8%80%E4%BA%9B%E5%9F%BA%E7%A1%80/" class="category-chain-item">一些基础</a>
   
   
 
@@ -474,13 +475,6 @@
     </div>
   
   
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/Java/" class="print-no-link">#Java</a>
-      
-    </div>
-  
 </div>
 
 
@@ -489,8 +483,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Java 基础</div>
-      <div>https://asleo814.github.io/2026/09/07/java基础/</div>
+      <div>CPU与进程的执行</div>
+      <div>https://asleo814.github.io/2026/09/27/CPU与进程的执行/</div>
     </div>
     <div class="license-meta">
       
@@ -502,7 +496,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2026年9月7日</div>
+          <div>2026年9月27日</div>
         </div>
       
       
@@ -534,18 +528,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/09/19/ClassLoader%E5%9F%BA%E7%A1%80/" title="ClassLoader基础">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">ClassLoader基础</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/06/14/hello-world/" title="Hello World">
-                        <span class="hidden-mobile">Hello World</span>
+                      <a href="/2026/09/24/%E7%A8%8B%E5%BA%8F%E8%A3%85%E8%BD%BD%E4%B8%8E%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/" title="程序装载与虚拟内存">
+                        <span class="hidden-mobile">程序装载与虚拟内存</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
