@@ -26,32 +26,32 @@
 <meta property="og:site_name" content="AsLeo的博客">
 <meta property="og:description" content="Java反射反射是框架设计的灵魂，使用前提：必须先拿到代表的字节码的Class，Class类用于表示.class文件（字节码） 反射概述反射简单来说：程序在跑起来之后，还能回头去看清自己有哪些类、这些类有哪些属性和方法，并把它们调用起来——就像一份“可调用清单” Java反射机制是在运行状态中（不是编译时），对于任意一个类，都能够知道这个类的全部信息（所有属性和方法）；也能调用任意一个对象的任意方">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1792824721280.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1792824776014.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1792824805499.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1792824835943.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1793705719071.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1793706396502.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1793707411411.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1793708365393.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1793708537821.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1793708608339.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1793722412508.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1793722390970.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1793724119932.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1793854866640.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1793855689759.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1794210195515.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1794211131021.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1794211939470.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1794211622382.png">
-<meta property="og:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1794212128695.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1792824721280.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1792824776014.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1792824805499.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1792824835943.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1793705719071.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1793706396502.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1793707411411.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1793708365393.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1793708537821.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1793708608339.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1793722412508.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1793722390970.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1793724119932.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1793854866640.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1793855689759.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1794210195515.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1794211131021.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1794211939470.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1794211622382.png">
+<meta property="og:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1794212128695.png">
 <meta property="article:published_time" content="2026-11-09T08:17:50.000Z">
-<meta property="article:modified_time" content="2026-11-10T08:47:23.843Z">
+<meta property="article:modified_time" content="2026-11-10T11:32:44.787Z">
 <meta property="article:author" content="AsLeo">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://asleo814.github.io/2026/11/09/Java-%E5%8F%8D%E5%B0%84/Java-%E5%8F%8D%E5%B0%84/1792824721280.png">
+<meta name="twitter:image" content="https://asleo814.github.io/img/posts/Java-%E5%8F%8D%E5%B0%84/1792824721280.png">
   
   
   
@@ -390,7 +390,7 @@
 <p>比如在公司用人事档案代表某人，想查他，查他的档案就行，也就是他的映射</p>
 <p>JAVA反射做的是同一件事：类里的每个成分（成员变量、方法、构造方法、包），在JVM里都有一份对应的”档案“，而这个档案本身就是一个JAVA对象。所以”解剖一个类“&#x3D;从<code>Class</code>对象出发，把里面每个成分都取出来，变成你能拿在手里操作的对象</p>
 <p>反射映射关系_类成分到Java对象</p>
-<p><img src="Java-%E5%8F%8D%E5%B0%84/1792824721280.png" srcset="/img/loading.gif" lazyload alt="79282472128"></p>
+<p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1792824721280.png" srcset="/img/loading.gif" lazyload alt="79282472128"></p>
 <h3 id="补一下基础"><a href="#补一下基础" class="headerlink" title="补一下基础"></a>补一下基础</h3><p>基础一直忘，那就学一遍写一遍吧</p>
 <table>
 <thead>
@@ -447,7 +447,7 @@
 <li>不可能为每一杯奶茶单独写一遍这套规则，所以写<strong>一份规则</strong>，然后照着它做无数杯。</li>
 </ul>
 <p><strong>那份规则 &#x3D; 类；做出来的每一杯 &#x3D; 对象。</strong> 看下面的图：</p>
-<p><img src="Java-%E5%8F%8D%E5%B0%84/1792824776014.png" srcset="/img/loading.gif" lazyload alt="79282477601"></p>
+<p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1792824776014.png" srcset="/img/loading.gif" lazyload alt="79282477601"></p>
 <h4 id="类"><a href="#类" class="headerlink" title="类"></a>类</h4><p>作用就一句话：<strong>把“一类东西的共有特征”集中写在一个地方，避免重复</strong></p>
 <p>java里类长这样</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MilkTea</span> &#123;<br>    String size;      <span class="hljs-comment">// 属性：杯量</span><br>    <span class="hljs-type">int</span> sweet;        <span class="hljs-comment">// 属性：甜度</span><br>    String topping;   <span class="hljs-comment">// 属性：加料</span><br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printLabel</span><span class="hljs-params">()</span> &#123;      <span class="hljs-comment">// 方法：能做的事</span><br>        System.out.println(size + <span class="hljs-string">&quot; / &quot;</span> + sweet + <span class="hljs-string">&quot;分糖 / &quot;</span> + topping);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
@@ -473,9 +473,9 @@
 </ol>
 <p><strong>执行时机</strong>：<code>new</code>的一瞬间自动被调用</p>
 <p><strong>完整流程</strong>：</p>
-<p><img src="Java-%E5%8F%8D%E5%B0%84/1792824805499.png" srcset="/img/loading.gif" lazyload alt="79282480549"></p>
+<p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1792824805499.png" srcset="/img/loading.gif" lazyload alt="79282480549"></p>
 <h2 id="反射的使用"><a href="#反射的使用" class="headerlink" title="反射的使用"></a>反射的使用</h2><h3 id="获取对象类的三种方法"><a href="#获取对象类的三种方法" class="headerlink" title="获取对象类的三种方法"></a>获取对象类的三种方法</h3><p>这是反射的入口，第一步都是先拿到这个“原型类”</p>
-<p><img src="Java-%E5%8F%8D%E5%B0%84/1792824835943.png" srcset="/img/loading.gif" lazyload alt="79282483594"></p>
+<p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1792824835943.png" srcset="/img/loading.gif" lazyload alt="79282483594"></p>
 <p>三种方法拿到的都是同一个档案卡，区别只在于”先拥有什么，才能拿到这个卡“</p>
 <h4 id="对象-getClass"><a href="#对象-getClass" class="headerlink" title="对象.getClass()"></a>对象.getClass()</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">Student</span> <span class="hljs-variable">stu1</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Student</span>();   <span class="hljs-comment">// 先造出一个学生对象</span><br><span class="hljs-type">Class</span> <span class="hljs-variable">stuClass</span> <span class="hljs-operator">=</span> stu1.getClass();  <span class="hljs-comment">// 问这个学生：你的档案卡呢？</span><br></code></pre></td></tr></table></figure>
 
@@ -647,26 +647,26 @@
 <li><strong>invoke(ab, “asdf”)</strong>：<strong>调用</strong>。第一个参数是”在哪个对象上调用”，后面是实际传的参数。相当于正常写 <code>ab.action(&quot;asdf&quot;)</code>。</li>
 <li><strong>private 方法</strong>：同理用 <code>getDeclaredMethod</code> + <code>setAccessible(true)</code>，再 <code>invoke</code>。</li>
 </ol>
-<h2 id="反射实操"><a href="#反射实操" class="headerlink" title="反射实操"></a>反射实操</h2><h3 id="获取对象类的三种方法-1"><a href="#获取对象类的三种方法-1" class="headerlink" title="获取对象类的三种方法"></a>获取对象类的三种方法</h3><h4 id="对象-getClass-1"><a href="#对象-getClass-1" class="headerlink" title="对象.getClass()"></a>对象.getClass()</h4><p><img src="Java-%E5%8F%8D%E5%B0%84/1793705719071.png" srcset="/img/loading.gif" lazyload alt="79370571907"></p>
+<h2 id="反射实操"><a href="#反射实操" class="headerlink" title="反射实操"></a>反射实操</h2><h3 id="获取对象类的三种方法-1"><a href="#获取对象类的三种方法-1" class="headerlink" title="获取对象类的三种方法"></a>获取对象类的三种方法</h3><h4 id="对象-getClass-1"><a href="#对象-getClass-1" class="headerlink" title="对象.getClass()"></a>对象.getClass()</h4><p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1793705719071.png" srcset="/img/loading.gif" lazyload alt="79370571907"></p>
 <ol>
 <li>先创建一个对象 stu ，创建对象的固定格式是 **类 变量名 &#x3D; new 类(); **变量名是自己起的，这里是创建Student类的stu</li>
 <li>用getClass()拿到stu的类，放到c里，c也要用Class，就像stu用Student类一样</li>
 <li>输出c.getClass()</li>
 </ol>
-<h4 id="类-class"><a href="#类-class" class="headerlink" title="类.class"></a>类.class</h4><p><img src="Java-%E5%8F%8D%E5%B0%84/1793706396502.png" srcset="/img/loading.gif" lazyload alt="79370639650"></p>
+<h4 id="类-class"><a href="#类-class" class="headerlink" title="类.class"></a>类.class</h4><p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1793706396502.png" srcset="/img/loading.gif" lazyload alt="79370639650"></p>
 <p>就是已经知道类叫什么了，直接输出</p>
-<h4 id="Class-forName-1"><a href="#Class-forName-1" class="headerlink" title="Class.forName()"></a>Class.forName()</h4><p><img src="Java-%E5%8F%8D%E5%B0%84/1793707411411.png" srcset="/img/loading.gif" lazyload alt="79370741141"></p>
+<h4 id="Class-forName-1"><a href="#Class-forName-1" class="headerlink" title="Class.forName()"></a>Class.forName()</h4><p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1793707411411.png" srcset="/img/loading.gif" lazyload alt="79370741141"></p>
 <p>就是拿到一个类，去找有没有这个类，感觉可以用来判断有没有这个类</p>
-<h3 id="从原型类中实例化对象-1"><a href="#从原型类中实例化对象-1" class="headerlink" title="从原型类中实例化对象"></a>从原型类中实例化对象</h3><h4 id="newInstance（无参构造）"><a href="#newInstance（无参构造）" class="headerlink" title="newInstance（无参构造）"></a>newInstance（无参构造）</h4><p><img src="Java-%E5%8F%8D%E5%B0%84/1793708365393.png" srcset="/img/loading.gif" lazyload alt="79370836539"></p>
+<h3 id="从原型类中实例化对象-1"><a href="#从原型类中实例化对象-1" class="headerlink" title="从原型类中实例化对象"></a>从原型类中实例化对象</h3><h4 id="newInstance（无参构造）"><a href="#newInstance（无参构造）" class="headerlink" title="newInstance（无参构造）"></a>newInstance（无参构造）</h4><p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1793708365393.png" srcset="/img/loading.gif" lazyload alt="79370836539"></p>
 <p>这里报错是因为，<code>newInstance</code>实例化后的对象默认是<code>Object</code>类的，而这里定的s1是<code>Student</code>类的，不能把一个Object的东西直接塞进Student类。</p>
 <p>可以把s1的类改了，验证一下，会发现可以输出了</p>
-<p><img src="Java-%E5%8F%8D%E5%B0%84/1793708537821.png" srcset="/img/loading.gif" lazyload alt="79370853782"></p>
+<p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1793708537821.png" srcset="/img/loading.gif" lazyload alt="79370853782"></p>
 <p>一般都是<strong>需要一个强转</strong>，在<code>c.newInstance()</code>，前面加<code>(类)</code>，告诉他强行转化成哪个类</p>
-<p><img src="Java-%E5%8F%8D%E5%B0%84/1793708608339.png" srcset="/img/loading.gif" lazyload alt="79370860833"></p>
-<h4 id="getConstructor-newInstance（有参构造）"><a href="#getConstructor-newInstance（有参构造）" class="headerlink" title="getConstructor + newInstance（有参构造）"></a>getConstructor + newInstance（有参构造）</h4><p><img src="Java-%E5%8F%8D%E5%B0%84/1793722412508.png" srcset="/img/loading.gif" lazyload alt="79372241250"></p>
+<p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1793708608339.png" srcset="/img/loading.gif" lazyload alt="79370860833"></p>
+<h4 id="getConstructor-newInstance（有参构造）"><a href="#getConstructor-newInstance（有参构造）" class="headerlink" title="getConstructor + newInstance（有参构造）"></a>getConstructor + newInstance（有参构造）</h4><p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1793722412508.png" srcset="/img/loading.gif" lazyload alt="79372241250"></p>
 <p>首先在开头需要<code>import java.lang.reflect.Constructor;</code>，用到了 <code>Constructor</code> 这个类，它不在默认能找到的地方，而是在一个叫 <code>java.lang.reflect</code> 的包里，需要导入才能使用</p>
 <p>那为什么之前用 <code>Class</code>、<code>Field</code> 不用 import？因为 <code>Class</code> 在 <code>java.lang</code> 包里，<code>java.lang</code> 是<strong>自动导入</strong>的，不用写 import。而 <code>Constructor</code>、<code>Field</code>、<code>Method</code> 这些反射相关的类，在 <code>java.lang.reflect</code> 包里，<strong>必须手动 import</strong>。</p>
-<p><img src="Java-%E5%8F%8D%E5%B0%84/1793722390970.png" srcset="/img/loading.gif" lazyload alt="79372239097"></p>
+<p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1793722390970.png" srcset="/img/loading.gif" lazyload alt="79372239097"></p>
 <p>第 5 行：<code>Class c = Student.class;</code></p>
 <p>拿到 Student 的 Class 档案，存进 c，现在c &#x3D; class Student</p>
 <p>第 6 行：<code>Constructor a = c.getConstructor(String.class, int.class);</code></p>
@@ -695,7 +695,7 @@
 <p>比如把 <code>for (Field f : fields)</code> 读成一句人话：</p>
 <p>“对于 <code>fields</code> 这个数组<strong>里的</strong>每一个 <code>Field</code>，把它取出来，放到变量 <code>f</code> 里。”</p>
 <p>那个冒号，就对应”<strong>里的</strong>“这个词</p>
-<p><img src="Java-%E5%8F%8D%E5%B0%84/1793724119932.png" srcset="/img/loading.gif" lazyload alt="79372411993"></p>
+<p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1793724119932.png" srcset="/img/loading.gif" lazyload alt="79372411993"></p>
 <p>输出的第一行：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> java.lang.String Student.name<br></code></pre></td></tr></table></figure>
 
@@ -726,8 +726,8 @@
 </tbody></table>
 <p>第二行同理：<code>public int Student.age</code>（public、int 类型、属于 Student、叫 age）</p>
 <h4 id="getDeclaredFields-——拿全部属性"><a href="#getDeclaredFields-——拿全部属性" class="headerlink" title="getDeclaredFields()——拿全部属性"></a>getDeclaredFields()——拿全部属性</h4><p>跟getFields()一样的写法，只是中间多了串字母</p>
-<p><img src="Java-%E5%8F%8D%E5%B0%84/1793854866640.png" srcset="/img/loading.gif" lazyload alt="79385486664"></p>
-<h4 id="修改属性值"><a href="#修改属性值" class="headerlink" title="修改属性值"></a>修改属性值</h4><h5 id="改-public-属性"><a href="#改-public-属性" class="headerlink" title="改 public 属性"></a>改 public 属性</h5><p><img src="Java-%E5%8F%8D%E5%B0%84/1793855689759.png" srcset="/img/loading.gif" lazyload alt="79385568975"></p>
+<p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1793854866640.png" srcset="/img/loading.gif" lazyload alt="79385486664"></p>
+<h4 id="修改属性值"><a href="#修改属性值" class="headerlink" title="修改属性值"></a>修改属性值</h4><h5 id="改-public-属性"><a href="#改-public-属性" class="headerlink" title="改 public 属性"></a>改 public 属性</h5><p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1793855689759.png" srcset="/img/loading.gif" lazyload alt="79385568975"></p>
 <p><code>Class c = Student.class;</code></p>
 <p>拿到 Student 的 Class 档案</p>
 <p><code>Student s = new Student(&quot;liu&quot;, 18);</code></p>
@@ -751,7 +751,7 @@
 <p>打印 s 的 name，验证改成功。因为 name 是 public，能直接 <code>s.name</code> 访问</p>
 <p>输出 wang（不再是原来的 “liu”），<strong>证明反射把属性改了</strong></p>
 <p>思路顺一遍：先拿到类的class档案，赋到一个c里（Class c）—— 造一个Student对象，给他们name和age —— 用<code>getField</code>从c那拿类Student的name属性，拿到name存进 f —— 用set改对象的参数 —— 成功改属性</p>
-<h5 id="改private属性"><a href="#改private属性" class="headerlink" title="改private属性"></a>改private属性</h5><p><img src="Java-%E5%8F%8D%E5%B0%84/1794210195515.png" srcset="/img/loading.gif" lazyload alt="79421019551"></p>
+<h5 id="改private属性"><a href="#改private属性" class="headerlink" title="改private属性"></a>改private属性</h5><p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1794210195515.png" srcset="/img/loading.gif" lazyload alt="79421019551"></p>
 <p><code>Student stu = new Student(&quot;liu&quot;, 18);</code></p>
 <p>造一个 Student 对象，name&#x3D;”liu”，age&#x3D;18</p>
 <p><code>Field f = c.getDeclaredField(&quot;age&quot;);</code></p>
@@ -786,7 +786,7 @@
 <p><code>get(s)</code> &#x3D; 读出 stu 的 age（读）</p>
 <p><strong>为什么用 f.get(s) 而不是 s.age？</strong> </p>
 <p>因为 age 是 private，在类外面<strong>不能</strong>直接写 <code>s.age</code> 访问。所以用反射的 <code>get</code> 方法，配合已经撬开的锁，把值读出来。输出 <code>99</code>，证明 age 真的被改成 99 了</p>
-<h3 id="调用类中的方法-1"><a href="#调用类中的方法-1" class="headerlink" title="调用类中的方法"></a>调用类中的方法</h3><h4 id="getMethods"><a href="#getMethods" class="headerlink" title="getMethods()"></a>getMethods()</h4><p><img src="Java-%E5%8F%8D%E5%B0%84/1794211131021.png" srcset="/img/loading.gif" lazyload alt="79421113102"></p>
+<h3 id="调用类中的方法-1"><a href="#调用类中的方法-1" class="headerlink" title="调用类中的方法"></a>调用类中的方法</h3><h4 id="getMethods"><a href="#getMethods" class="headerlink" title="getMethods()"></a>getMethods()</h4><p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1794211131021.png" srcset="/img/loading.gif" lazyload alt="79421113102"></p>
 <p><code>import java.lang.reflect.Method;</code></p>
 <p>导入 Method 类（在 <code>java.lang.reflect</code> 包里）</p>
 <p><code>Method[] a = c.getMethods();</code></p>
@@ -808,8 +808,8 @@
 <li>前面带 <code>Student.</code> 的 → 自己写的方法</li>
 <li>前面带 <code>java.lang.Object.</code> 的 → 从 Object 继承来的方法</li>
 </ul>
-<h4 id="getMethod-invoke"><a href="#getMethod-invoke" class="headerlink" title="getMethod + invoke"></a>getMethod + invoke</h4><h5 id="调用public方法"><a href="#调用public方法" class="headerlink" title="调用public方法"></a>调用public方法</h5><p><img src="Java-%E5%8F%8D%E5%B0%84/1794211939470.png" srcset="/img/loading.gif" lazyload alt="79421193947"></p>
-<p><img src="Java-%E5%8F%8D%E5%B0%84/1794211622382.png" srcset="/img/loading.gif" lazyload alt="79421162238"></p>
+<h4 id="getMethod-invoke"><a href="#getMethod-invoke" class="headerlink" title="getMethod + invoke"></a>getMethod + invoke</h4><h5 id="调用public方法"><a href="#调用public方法" class="headerlink" title="调用public方法"></a>调用public方法</h5><p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1794211939470.png" srcset="/img/loading.gif" lazyload alt="79421193947"></p>
+<p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1794211622382.png" srcset="/img/loading.gif" lazyload alt="79421162238"></p>
 <p><code>Method m = c.getMethod(&quot;action&quot;, String.class);</code></p>
 <p>拆开讲：</p>
 <ul>
@@ -828,7 +828,7 @@
 </ul>
 <p><strong>整行意思</strong>：在 s 对象上，调用 action 方法，传入参数 “Hello world”</p>
 <p><strong>执行结果</strong>：action 方法里的 <code>System.out.println(&quot;action: &quot; + s)</code> 被执行，打印 <code>action: Hello world</code></p>
-<h5 id="调用private方法"><a href="#调用private方法" class="headerlink" title="调用private方法"></a>调用private方法</h5><p><img src="Java-%E5%8F%8D%E5%B0%84/1794212128695.png" srcset="/img/loading.gif" lazyload alt="79421212869"></p>
+<h5 id="调用private方法"><a href="#调用private方法" class="headerlink" title="调用private方法"></a>调用private方法</h5><p><img src="/img/posts/Java-%E5%8F%8D%E5%B0%84/1794212128695.png" srcset="/img/loading.gif" lazyload alt="79421212869"></p>
 <p>就是多了个**“撬锁”**，再把getMethod换成getDeclaredMethod.</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong>一条主线：反射 &#x3D; 先拿档案，再操作档案</strong></p>
 <p>反射的<strong>全部动作</strong>，都是围绕”<strong>档案（Class 对象）</strong>“展开的。四个阶段层层递进：</p>
@@ -975,12 +975,6 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
-                    
-                      <a href="/2026/11/10/Test/" title="Test">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Test</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
                     
                   </article>
                   <article class="post-next col-6">
